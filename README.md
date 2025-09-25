@@ -1,17 +1,36 @@
 # ATmega328P HAL Drivers
 
 Unofficial (not affiliated with Microchip in any way) hardware abstraction layer
-drivers for ATmega328P microcontroller. This driver provides easy to use
+drivers for ATmega328P microcontroller. This driver provides an easy to use
 interface for device peripherals while staying fast and small as possible.
 
 ## Requirements
 
-AVR libc is needed to compile this project.
+AVR toolchain, including `avr-gcc` and `avr-libc` is needed to compile and test
+this project.
 
 ```sh
 # For Ubuntu
 sudo apt install avr-libc avr-gcc
+
+# For Fedora
+sudo dnf install avr*
 ```
+
+## Usage
+
+You can choose add this repo as a submodule to your project as a whole and link
+with your project using provided `CMakeLists.txt` file:
+
+```cmake
+# Add ATmega328P HAL driver as a subdirectory.
+add_subdirectory("${PROJECT_SOURCE_DIR}/ATmega328P-HAL-Driver" atmega328p_hal_build)
+target_link_libraries(my_project PRIVATE ATmega328P_HAL_Driver)
+```
+
+Or, you can add specific `src/module.c` files to your build toolchain and add
+[`include/`](include/) directory as one of the include dirs for the compiler,
+manually.
 
 ## Documentation
 
@@ -27,9 +46,9 @@ Generated documents will be placed in `docs/build` directory.
 
 ## Testing
 
-Local unit and integration tests uses Unity for the framework. You need to clone
-that submodule for testing. If you didn't also clone submodules while cloning
-this repo, run:
+Local unit and integration tests uses [Unity](https://www.throwtheswitch.org/unity)
+for the testing framework. You need to clone that submodule for testing. If you
+didn't also clone submodules while cloning this repo, run:
 
 ```sh
 git submodule update --init
