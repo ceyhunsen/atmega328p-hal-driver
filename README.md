@@ -4,6 +4,10 @@ Unofficial (not affiliated with Microchip in any way) hardware abstraction layer
 drivers for ATmega328P microcontroller. This driver provides an easy to use
 interface for device peripherals while staying fast and small as possible.
 
+> [!WARNING]
+>
+> This software is in it's early development. Use it with caution!
+
 ## Requirements
 
 AVR toolchain, including `avr-gcc` and `avr-libc` is needed to compile and test
@@ -46,9 +50,11 @@ Generated documents will be placed in `docs/build` directory.
 
 ## Testing
 
-Local unit and integration tests uses [Unity](https://www.throwtheswitch.org/unity)
-for the testing framework. You need to clone that submodule for testing. If you
-didn't also clone submodules while cloning this repo, run:
+There are local unit and integration tests that can test this driver without the
+actual hardware. These tests utilizes [Unity](https://www.throwtheswitch.org/unity)
+as the testing framework. You need to clone [Unity repository](https://github.com/ThrowTheSwitch/Unity)
+as a submodule for testing. If you didn't also clone recursively while cloning
+this repo, run:
 
 ```sh
 git submodule update --init
