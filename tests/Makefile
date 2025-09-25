@@ -27,7 +27,7 @@
 HOST_C_STD = /usr/include/
 
 # AVR-libc include directory.
-MCU_C_LIB  = /usr/avr/include
+MCU_C_LIB  = -isystem /usr/avr/include -isystem /usr/lib/avr/include
 
 # Host C compiler.
 export HOST_CC = gcc
@@ -62,7 +62,7 @@ export MCU_C_INCLUDES =          \
 export HOST_C_SYS_INCLUDES =  \
 -isystem $(HOST_C_STD)        \
 -isystem $(CURDIR)/mocks      \
--isystem $(MCU_C_LIB)         \
+$(MCU_C_LIB)         \
 
 # Host C definitions.
 export HOST_C_DEFINES =  \
