@@ -3,9 +3,9 @@
 ## Opening PRs and Issues
 
 You can either open an issue to report a bug, suggest a new feature or discuss
-another topic before opening a PR. Or, you can directly open a PR to suggest
-changes. Opening a PR beforehand might decrease review time but it is not
-necessary.
+another topic. Or, you can directly open a PR without a matching issue to
+suggest changes. Opening an issue beforehand might decrease review time but it
+is not necessary. Also, issues without PRs are also welcome.
 
 ## Formatting
 
