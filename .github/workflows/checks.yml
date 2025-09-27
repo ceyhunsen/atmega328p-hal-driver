@@ -2,19 +2,13 @@ name: General code checks
 on: pull_request
 
 jobs:
-  formatting-check:
-    name: Formatting Check
+  check-formatting:
+    name: Check formatting
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - "src"
-          - "include"
-          - "examples"
+
     steps:
       - uses: actions/checkout@v4
       - name: Check formatting using clang-format.
         uses: jidicula/clang-format-action@v4.15.0
         with:
           clang-format-version: "18"
-          check-path: ${{ matrix.path }}
