@@ -39,15 +39,15 @@
  * @param mode Sleep mode to be set.
  */
 void power_set_sleep_mode(enum power_sleep_modes mode) {
-  // Assign new mode. Other bits of the register should be 0.
-  SMCR = mode << 1;
+    // Assign new mode. Other bits of the register should be 0.
+    SMCR = mode << 1;
 
-  // Set sleep enable bit and call sleep instruction.
-  SET_BIT(SMCR, SE);
-  sleep_cpu();
+    // Set sleep enable bit and call sleep instruction.
+    SET_BIT(SMCR, SE);
+    sleep_cpu();
 
-  // Clear sleep flag after sleep.
-  CLEAR_BIT(SMCR, SE);
+    // Clear sleep flag after sleep.
+    CLEAR_BIT(SMCR, SE);
 }
 
 /**
@@ -57,8 +57,8 @@ void power_set_sleep_mode(enum power_sleep_modes mode) {
  * @param state 1 (or any other positive number) for on, 0 for off.
  * */
 void power_set_module_power(enum power_modules module, uint8_t state) {
-  if (state)
-    CLEAR_BIT(PRR, module);
-  else
-    SET_BIT(PRR, module);
+    if (state)
+        CLEAR_BIT(PRR, module);
+    else
+        SET_BIT(PRR, module);
 }

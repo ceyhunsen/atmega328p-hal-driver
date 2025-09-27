@@ -40,47 +40,47 @@
  * @param config Configuration option for watchdog.
  * */
 void system_set_watchdog(struct system_watchdog_t config) {
-  uint8_t control_register;
+    uint8_t control_register;
 
-  control_register = 0;
+    control_register = 0;
 
-  // Save operating mode.
-  switch (config.mode) {
-  default:
-  case system_watchdog_disabled:
-    break;
-  case system_watchdog_interrupt_mode:
-    SET_BIT(control_register, WDIE);
-    break;
-  case system_watchdog_reset_mode:
-    SET_BIT(control_register, WDE);
-    break;
-  case system_watchdog_interrupt_and_reset_mode:
-    SET_BIT(control_register, WDIE);
-    SET_BIT(control_register, WDE);
-    break;
-  }
+    // Save operating mode.
+    switch (config.mode) {
+    default:
+    case system_watchdog_disabled:
+        break;
+    case system_watchdog_interrupt_mode:
+        SET_BIT(control_register, WDIE);
+        break;
+    case system_watchdog_reset_mode:
+        SET_BIT(control_register, WDE);
+        break;
+    case system_watchdog_interrupt_and_reset_mode:
+        SET_BIT(control_register, WDIE);
+        SET_BIT(control_register, WDE);
+        break;
+    }
 
-  // If watchdog timer is not disabled, save cycles.
-  if (config.mode != system_watchdog_disabled) {
-    control_register |= (config.cycles << WDP0);
-  }
+    // If watchdog timer is not disabled, save cycles.
+    if (config.mode != system_watchdog_disabled) {
+        control_register |= (config.cycles << WDP0);
+    }
 
-  // Disable interrupts and reset watchdog counter.
-  cli();
-  system_reset_watchdog();
+    // Disable interrupts and reset watchdog counter.
+    cli();
+    system_reset_watchdog();
 
-  // Clear watchdog status flag.
-  CLEAR_BIT(MCUSR, WDRF);
+    // Clear watchdog status flag.
+    CLEAR_BIT(MCUSR, WDRF);
 
-  // Set change enable.
-  WDTCSR |= BIT(WDCE) | BIT(WDE);
+    // Set change enable.
+    WDTCSR |= BIT(WDCE) | BIT(WDE);
 
-  // Write final value to register.
-  WDTCSR = control_register;
+    // Write final value to register.
+    WDTCSR = control_register;
 
-  // Finally, enable interrupts.
-  sei();
+    // Finally, enable interrupts.
+    sei();
 }
 
 /**
@@ -95,10 +95,10 @@ inline void system_reset_watchdog() { wdt_reset(); }
  * @see system_reset_status
  * */
 inline uint8_t system_get_reset_status() {
-  uint8_t tmp;
+    uint8_t tmp;
 
-  tmp = MCUSR;
-  MCUSR = 0;
+    tmp = MCUSR;
+    MCUSR = 0;
 
-  return tmp;
+    return tmp;
 }
