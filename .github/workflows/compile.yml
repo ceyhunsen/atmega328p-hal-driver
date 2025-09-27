@@ -1,0 +1,17 @@
+name: Compile library and examples
+description: Compiles the code for AVR architecture using the AVR GCC compiler
+on: pull_request
+
+jobs:
+  compile-examples:
+    name: Compile examples
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - uses: ./.github/actions/avr-toolchain
+      - name: Run unit tests
+        working-directory: ./tests
+        run: make unit
