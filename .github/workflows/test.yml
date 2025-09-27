@@ -1,0 +1,27 @@
+name: Test code
+description: Tests driver without a hardware using unit and integration tests
+on: pull_request
+
+jobs:
+  test-unit:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Change directory to tests/
+        run: cd tests
+      - name: Run unit tests
+        run: make unit
+
+  test-integration:
+    name: Run integration tests
+    runs-on: ubuntu-latest
+    if: false
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Change directory to tests/
+        run: cd tests
+      - name: Run integration tests
+        run: make integration
