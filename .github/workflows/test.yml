@@ -9,9 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Change directory to tests/
-        run: cd tests
       - name: Run unit tests
+        working-directory: ./tests
         run: make unit
 
   test-integration:
@@ -21,7 +20,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Change directory to tests/
-        run: cd tests
       - name: Run integration tests
+        working-directory: ./tests
         run: make integration
