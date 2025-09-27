@@ -6,6 +6,7 @@ runs:
 
   steps:
     - name: Install AVR toolchain
+      shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc-avr binutils-avr avr-libc make
