@@ -1,0 +1,11 @@
+name: Install AVR Toolchain
+description: "Installs AVR compiler, libraries and other related stuff"
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Install AVR toolchain
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-avr binutils-avr avr-libc make

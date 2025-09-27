@@ -11,10 +11,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: "true"
-      - name: Install AVR toolchain
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-avr binutils-avr avr-libc make
+      - uses: ./.github/actions/avr-toolchain
       - name: Run unit tests
         working-directory: ./tests
         run: make unit
@@ -28,10 +25,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: "true"
-      - name: Install AVR toolchain
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-avr binutils-avr avr-libc make
+      - uses: ./.github/actions/avr-toolchain
       - name: Run integration tests
         working-directory: ./tests
         run: make integration
