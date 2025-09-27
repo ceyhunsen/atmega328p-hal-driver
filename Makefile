@@ -1,4 +1,4 @@
-# Basic comands for the atmega328p-hal-driver project
+# Basic commands for the atmega328p-hal-driver project
 
 C_FILES := $(shell find $(./) -name '*.c' -not -path "./tests/Unity/*")
 H_FILES := $(shell find $(./) -name '*.h' -not -path "./tests/Unity/*")
