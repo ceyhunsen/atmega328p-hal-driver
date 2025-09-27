@@ -9,6 +9,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "true"
       - name: Run unit tests
         working-directory: ./tests
         run: make unit
@@ -20,6 +22,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: "true"
       - name: Run integration tests
         working-directory: ./tests
         run: make integration
