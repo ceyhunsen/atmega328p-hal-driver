@@ -16,3 +16,5 @@ jobs:
         uses: threeal/cmake-action@v2.1.0
         with:
           c-compiler: avr-gcc
+          options: |
+            BUILD_EXAMPLES=ON
