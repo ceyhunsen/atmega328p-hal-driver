@@ -29,7 +29,7 @@ with your project using provided `CMakeLists.txt` file:
 ```cmake
 # Add ATmega328P HAL driver as a subdirectory.
 add_subdirectory("${PROJECT_SOURCE_DIR}/ATmega328P-HAL-Driver" atmega328p_hal_build)
-target_link_libraries(my_project PRIVATE ATmega328P_HAL_Driver)
+target_link_libraries(my_project PRIVATE atmega328p_hal_driver)
 ```
 
 Or, you can add specific `src/module.c` files to your build toolchain and add
