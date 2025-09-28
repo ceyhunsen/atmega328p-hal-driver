@@ -14,3 +14,5 @@ jobs:
       - uses: ./.github/actions/avr-toolchain
       - name: Build Project
         uses: threeal/cmake-action@v2.1.0
+        with:
+          c-compiler: avr-gcc
