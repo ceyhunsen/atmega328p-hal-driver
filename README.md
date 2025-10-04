@@ -36,6 +36,14 @@ Or, you can add specific `src/module.c` files to your build toolchain and add
 [`include/`](include/) directory as one of the include dirs for the compiler,
 manually.
 
+To compile examples:
+
+```sh
+mkdir build && cd build
+BUILD_EXAMPLES=1 cmake -D CMAKE_C_COMPILER=avr-gcc ..
+cmake --build .
+```
+
 ## Documentation
 
 Documentation can be generated locally. In order to generate documentation, your
