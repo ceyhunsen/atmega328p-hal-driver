@@ -1,12 +1,13 @@
 # ATmega328P HAL Drivers
 
 Unofficial (not affiliated with Microchip in any way) hardware abstraction layer
-drivers for ATmega328P microcontroller. This driver provides an easy to use
-interface for device peripherals while staying fast and small as possible.
+drivers for ATmega328P microcontroller. This driver aims to be suited for the
+general use instead of a specific project, while staying fast and small as
+possible.
 
 > [!WARNING]
 >
-> This software is in it's early development. Use it with caution!
+> This library is in it's early development. Use it with caution!
 
 ## Requirements
 
@@ -23,8 +24,8 @@ sudo dnf install avr*
 
 ## Usage
 
-You can choose add this repo as a submodule to your project as a whole and link
-with your project using provided `CMakeLists.txt` file:
+You can choose to add this repo as a submodule to your project as a whole and
+link to your project using the provided `CMakeLists.txt` file:
 
 ```cmake
 # Add ATmega328P HAL driver as a subdirectory.
@@ -36,13 +37,16 @@ Or, you can add specific `src/module.c` files to your build toolchain and add
 [`include/`](include/) directory as one of the include dirs for the compiler,
 manually.
 
-To compile examples:
+To compile built-in examples:
 
 ```sh
 mkdir build && cd build
-BUILD_EXAMPLES=1 cmake -D CMAKE_C_COMPILER=avr-gcc ..
+cmake -D CMAKE_C_COMPILER=avr-gcc -D BUILD_EXAMPLES=1 ..
 cmake --build .
 ```
+
+After compilation, example files will be in `build/examples/module_name/module_name`
+and ready to be flashed to MCU.
 
 ## Documentation
 
@@ -77,4 +81,4 @@ make
 
 ## License
 
-This project is licensed under [MIT license](LICENSE).
+This project is licensed under the [MIT license](LICENSE).
