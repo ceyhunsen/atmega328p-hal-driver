@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-project(atmega328p_hal_driver)
+project(atmega328p_hal_driver VERSION 0.3)
 
 # set(CMAKE_C_COMPILER "avr-gcc")
 # set(CMAKE_CXX_COMPILER "avr-g++")
