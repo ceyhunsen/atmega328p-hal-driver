@@ -18,6 +18,9 @@ if(UNIX)
     target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC /usr/avr/include)
 endif()
 
+add_library(mocks ${MOCK_AVR_SYSTEM_DIR}/test_mock_up.c)
+target_include_directories(mocks SYSTEM PRIVATE ${MOCK_AVR_SYSTEM_DIR})
+
 # Test framework.
 # TODO: fetch this dynamically?
 add_subdirectory(${UNITY_DIR})
@@ -28,7 +31,7 @@ function(add_test_target test_file)
 
     add_executable(${TARGET_NAME} ${test_file})
 
-    target_link_libraries(${TARGET_NAME} PRIVATE atmega328p_hal_driver unity)
+    target_link_libraries(${TARGET_NAME} PRIVATE atmega328p_hal_driver unity mocks)
     target_compile_features(${TARGET_NAME} PRIVATE c_std_99) # TODO: 89?
 
     add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
@@ -36,4 +39,9 @@ endfunction()
 
 # Tests.
 add_test_target("${UNIT_DIR}/hal.c")
-# add_test_target("${UNIT_DIR}/mock.c")
+add_test_target("${UNIT_DIR}/mock.c")
+
+add_test_target("${UNIT_DIR}/power.c")
+# add_test_target("${UNIT_DIR}/system.c")
+# add_test_target("${UNIT_DIR}/io.c")
+# add_test_target("${UNIT_DIR}/usart.c")

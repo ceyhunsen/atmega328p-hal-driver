@@ -319,6 +319,7 @@ void test_read_d_multi() {
         TEST_ASSERT_EQUAL(io_state_high, state);
     }
 }
+
 void test_toggle_b_single() {
     enum io_result result;
     struct io_pin io_pin;
