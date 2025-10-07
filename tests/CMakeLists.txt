@@ -13,25 +13,21 @@ set(UNITY_DIR ${TESTS_DIR}/Unity)
 # directories are for a limited number of OS'es and your system might need to be
 # added to this list.
 target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC ${MOCK_AVR_SYSTEM_DIR})
-target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC /usr/lib/avr/include)
-target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC /usr/avr/include)
+if(UNIX)
+    target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC /usr/lib/avr/include)
+    target_include_directories(atmega328p_hal_driver SYSTEM PUBLIC /usr/avr/include)
+endif()
 
 # Test framework.
 # TODO: fetch this dynamically?
 add_subdirectory(${UNITY_DIR})
 
-# Helper to add test targets.
-function(add_test_target target_name srcs src_includes)
+# Adds a test for given source files.
+function(add_test_target target_name srcs)
     add_executable(${target_name} ${srcs})
 
     target_link_libraries(${target_name} PRIVATE atmega328p_hal_driver unity)
-    target_include_directories(${target_name}
-        PRIVATE
-            ${src_includes}
-            ${UNITY_DIR}/src
-        SYSTEM PUBLIC
-            ${MOCK_AVR_SYSTEM_DIR}
-    )
+    target_compile_features(${target_name} PRIVATE c_std_99) # TODO: 89?
 
     add_test(NAME ${target_name} COMMAND ${target_name})
 endfunction()
@@ -40,5 +36,4 @@ endfunction()
 add_test_target(
     "test_hal"
     "${UNIT_DIR}/hal/hal.c"
-    ${UNIT_DIR}/hal/
 )
