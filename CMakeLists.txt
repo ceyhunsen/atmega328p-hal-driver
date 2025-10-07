@@ -14,6 +14,5 @@ endif()
 # Unit and integration tests.
 option(BUILD_TESTING "Build tests" OFF)
 if(BUILD_TESTING)
-  include(CTest)
   add_subdirectory(tests)
 endif()
