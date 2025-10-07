@@ -12,8 +12,8 @@ if(BUILD_EXAMPLES)
 endif()
 
 # Unit and integration tests.
-# include(CTest)
-# option(BUILD_TESTING "Build tests" OFF)
-# if(BUILD_TESTING)
-#   add_subdirectory(tests)
-# endif()
+include(CTest)
+option(BUILD_TESTING "Build tests" OFF)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()

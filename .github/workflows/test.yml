@@ -3,29 +3,19 @@ description: Tests driver without a hardware using unit and integration tests
 on: pull_request
 
 jobs:
-  test-unit:
-    name: Run unit tests
+  tests:
+    name: Run unit and integration tests
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: "true"
-      - uses: ./.github/actions/avr-toolchain
-      - name: Run unit tests
-        working-directory: ./tests
-        run: make unit
-
-  test-integration:
-    name: Run integration tests
-    runs-on: ubuntu-latest
-    if: false
-
-    steps:
-      - uses: actions/checkout@v4
+      - name: Build Project
+        uses: threeal/cmake-action@v2.1.0
         with:
-          submodules: "true"
-      - uses: ./.github/actions/avr-toolchain
-      - name: Run integration tests
-        working-directory: ./tests
-        run: make integration
+          options: |
+            BUILD_TESTING=ON
+      - name: Run tests
+        working-directory: ./build
+        run: make test
