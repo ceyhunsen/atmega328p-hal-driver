@@ -23,17 +23,17 @@ endif()
 add_subdirectory(${UNITY_DIR})
 
 # Adds a test for given source files.
-function(add_test_target target_name srcs)
-    add_executable(${target_name} ${srcs})
+function(add_test_target test_file)
+    get_filename_component(TARGET_NAME ${test_file} NAME_WE)
 
-    target_link_libraries(${target_name} PRIVATE atmega328p_hal_driver unity)
-    target_compile_features(${target_name} PRIVATE c_std_99) # TODO: 89?
+    add_executable(${TARGET_NAME} ${test_file})
 
-    add_test(NAME ${target_name} COMMAND ${target_name})
+    target_link_libraries(${TARGET_NAME} PRIVATE atmega328p_hal_driver unity)
+    target_compile_features(${TARGET_NAME} PRIVATE c_std_99) # TODO: 89?
+
+    add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
 endfunction()
 
 # Tests.
-add_test_target(
-    "test_hal"
-    "${UNIT_DIR}/hal/hal.c"
-)
+add_test_target("${UNIT_DIR}/hal.c")
+# add_test_target("${UNIT_DIR}/mock.c")
