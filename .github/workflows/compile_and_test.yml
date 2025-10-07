@@ -1,0 +1,43 @@
+name: Compile and Test
+description: Compiles library and examples using the avr-gcc compiler. Also run tests.
+on: pull_request
+
+jobs:
+  compile:
+    name: Compile library with avr-gcc
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+      - uses: ./.github/actions/avr-toolchain
+
+      - name: Build library standalone
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          c-compiler: avr-gcc
+      - name: Build library with examples
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          c-compiler: avr-gcc
+          options: |
+            BUILD_EXAMPLES=ON
+
+  test:
+    name: Run unit and integration tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Build Project
+        uses: threeal/cmake-action@v2.1.0
+        with:
+          options: |
+            BUILD_TESTING=ON
+      - name: Run tests
+        working-directory: ./build
+        run: make test
