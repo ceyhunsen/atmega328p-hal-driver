@@ -32,6 +32,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: "true"
+      - uses: ./.github/actions/avr-toolchain
 
       - name: Build Project
         uses: threeal/cmake-action@v2.1.0

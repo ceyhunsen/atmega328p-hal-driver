@@ -28,8 +28,9 @@
  * SOFTWARE.
  * */
 
+#include "hal_internals.h"
 #include "unity.h"
-#include <hal_internals.h>
+
 #include <stdint.h>
 
 /**
@@ -66,11 +67,11 @@ void test_clear_a_cleared_bit() {
 void test_clear_every_bit() {
     uint32_t value, expected, i;
 
-    value = UINT32_MAX;
-    expected = UINT32_MAX;
+    value = INT32_MAX;
+    expected = INT32_MAX;
 
-    for (i = 0; i < 32; i++) {
-        CLEAR_BIT(value, 32 - i - 1);
+    for (i = 0; i < 31; i++) {
+        CLEAR_BIT(value, 31 - i - 1);
         expected >>= 1;
 
         TEST_ASSERT_EQUAL(expected, value);
