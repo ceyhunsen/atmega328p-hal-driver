@@ -1,5 +1,9 @@
 name: General code checks
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   check-formatting:
@@ -12,3 +16,17 @@ jobs:
         uses: jidicula/clang-format-action@v4.15.0
         with:
           clang-format-version: "18"
+
+  check-for-todos:
+    name: Check for TODO keywords
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for TODO keywords
+        run: |
+          if result=$(git grep -i "TODO" -- ':!**/checks.yml' ':!docs/Doxyfile'); then
+            echo "$result"
+            exit 1
+          fi

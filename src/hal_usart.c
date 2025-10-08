@@ -160,8 +160,6 @@ static inline enum usart_result set_baud_rate(uint32_t baud_rate,
                                               uint8_t prescaler) {
     uint16_t baud_rate_register;
 
-    // TODO: check baud rate is legal or not.
-
     baud_rate_register = F_CPU / prescaler / baud_rate - 1;
 
     UBRR0H = (baud_rate_register & 0xFF00) >> 8;

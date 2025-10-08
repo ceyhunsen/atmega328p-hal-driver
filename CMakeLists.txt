@@ -1,6 +1,23 @@
 cmake_minimum_required(VERSION 3.11)
+project(atmega328p_hal_driver VERSION 0.3 LANGUAGES C)
 
-add_library(ATmega328P_HAL_Driver src/hal_power.c src/hal_system.c)
+add_library(atmega328p_hal_driver src/hal_power.c src/hal_system.c)
+target_include_directories(atmega328p_hal_driver PUBLIC include)
+target_compile_definitions(atmega328p_hal_driver PUBLIC __AVR_ATmega328P__)
 
-target_include_directories(ATmega328P_HAL_Driver PUBLIC include)
-target_compile_definitions(ATmega328P_HAL_Driver PUBLIC __AVR_ATmega328P__)
+set_property(TARGET atmega328p_hal_driver PROPERTY C_STANDARD 90)
+
+# Optional examples.
+option(BUILD_EXAMPLES "Build example programs" OFF)
+if(BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
+
+# Unit and integration tests.
+option(BUILD_TESTING "Build tests" OFF)
+if(BUILD_TESTING)
+  include(CTest)
+  enable_testing()
+
+  add_subdirectory(tests)
+endif()
