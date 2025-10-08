@@ -26,10 +26,7 @@ jobs:
 
       - name: Check for TODO keywords
         run: |
-          result=$(git grep -i "TODO" -- ':!**/checks.yml' ':!docs/Doxyfile')
-          if [ -n "$result" ]; then
+          if result=$(git grep -i "TODO" -- ':!**/checks.yml' ':!docs/Doxyfile'); then
             echo "$result"
             exit 1
-          else
-            exit 0
           fi
