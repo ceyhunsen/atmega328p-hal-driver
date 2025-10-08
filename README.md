@@ -29,7 +29,7 @@ link to your project using the provided `CMakeLists.txt` file:
 
 ```cmake
 # Add ATmega328P HAL driver as a subdirectory.
-add_subdirectory("${PROJECT_SOURCE_DIR}/ATmega328P-HAL-Driver" atmega328p_hal_build)
+add_subdirectory("${PROJECT_SOURCE_DIR}/atmega328p-hal-driver" atmega328p_hal_build)
 target_link_libraries(my_project PRIVATE atmega328p_hal_driver)
 ```
 
@@ -40,7 +40,7 @@ manually.
 To compile built-in examples:
 
 ```sh
-mkdir build && cd build
+mkdir -p build && cd build
 cmake -D CMAKE_C_COMPILER=avr-gcc -D BUILD_EXAMPLES=1 ..
 cmake --build .
 ```
@@ -64,9 +64,9 @@ Generated documents will be placed in `docs/build` directory.
 
 There are local unit and integration tests that can test this driver without the
 actual hardware. These tests utilizes [Unity](https://www.throwtheswitch.org/unity)
-as the testing framework. You need to clone [Unity repository](https://github.com/ThrowTheSwitch/Unity)
-as a submodule for testing. If you didn't also clone recursively while cloning
-this repo, run:
+as the testing framework. [Unity repository](https://github.com/ThrowTheSwitch/Unity)
+already added as a submodule to this repo. If you didn't clone this repo
+recursively, run:
 
 ```sh
 git submodule update --init
@@ -75,8 +75,10 @@ git submodule update --init
 Tests can be run using:
 
 ```sh
-cd tests
-make
+mkdir -p build && cd build
+cmake -D BUILD_TESTING=1 ..
+cmake --build .
+make test
 ```
 
 ## License
