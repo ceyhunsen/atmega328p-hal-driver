@@ -32,7 +32,6 @@ function(add_test_target test_file)
     add_executable(${TARGET_NAME} ${test_file})
 
     target_link_libraries(${TARGET_NAME} PRIVATE atmega328p_hal_driver unity mocks)
-    target_compile_features(${TARGET_NAME} PRIVATE c_std_99) # TODO: 89?
 
     add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
 endfunction()
