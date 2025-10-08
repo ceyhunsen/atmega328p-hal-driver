@@ -1,6 +1,10 @@
 name: Compile and Test
 description: Compiles library and examples using the avr-gcc compiler. Also run tests.
-on: pull_request
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   compile:
