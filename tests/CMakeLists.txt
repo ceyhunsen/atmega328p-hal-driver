@@ -22,7 +22,6 @@ add_library(mocks ${MOCK_AVR_SYSTEM_DIR}/test_mock_up.c)
 target_include_directories(mocks SYSTEM PRIVATE ${MOCK_AVR_SYSTEM_DIR})
 
 # Test framework.
-# TODO: fetch this dynamically?
 add_subdirectory(${UNITY_DIR})
 
 # Adds a test for given source files.
