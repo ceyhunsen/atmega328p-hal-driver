@@ -12,13 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Default formatter.
 - CI/CD jobs for:
-  - Checking formatting.
+  - Check formatting.
+  - Compile for AVR architecture
+  - Test
+- Support for CMake.
 
 ### Changed
 
 - Updated README:
   - Added project requirements.
-  - Added testing steps.
+  - How to run tests.
+  - How to compile examples.
+- Tests and examples are built with CMake.
+- Tests run with CTest
 
 ### Fixed
 
