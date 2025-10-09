@@ -9,6 +9,7 @@ build:
   jobs:
     build:
       html:
+        - git submodule update --init
         - cd docs && doxygen Doxyfile
         - mkdir -p $READTHEDOCS_OUTPUT/html/
         - cp -r docs/build/html/* $READTHEDOCS_OUTPUT/html
