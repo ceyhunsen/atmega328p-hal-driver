@@ -5,9 +5,9 @@ build:
   tools:
     python: "3.11"
   jobs:
-    pre_build:
-      - cd docs; doxygen Doxyfile
+    build:
+      doxygen:
+        - cd docs
+        - doxygen Doxyfile
     post_build:
-      - pip install mkdocs-material
-      - mkdocs build --site-dir $READTHEDOCS_OUTPUT/html
       - cp -r docs/build/html $READTHEDOCS_OUTPUT/html
