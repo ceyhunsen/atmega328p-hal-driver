@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Compile for AVR architecture
   - Test
 - Support for CMake.
+- SPDX identifiers for each source file.
 
 ### Changed
 
