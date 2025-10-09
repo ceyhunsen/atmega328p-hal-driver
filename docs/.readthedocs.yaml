@@ -7,7 +7,6 @@ build:
   jobs:
     build:
       html:
-        - cd docs
-        - doxygen Doxyfile
+        - doxygen docs/Doxyfile
     post_build:
-      - cp -r docs/build/html $READTHEDOCS_OUTPUT/html
+      - cp -r build/html $READTHEDOCS_OUTPUT/html
