@@ -5,6 +5,9 @@
  * Power management and sleep modes module, example usage.
  */
 
+// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-License-Identifier: MIT
+
 #include "hal_power.h"
 
 int main() {

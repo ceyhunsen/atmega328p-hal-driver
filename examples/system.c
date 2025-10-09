@@ -5,6 +5,9 @@
  * System control and reset module, example usage.
  */
 
+// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-License-Identifier: MIT
+
 #include "hal_system.h"
 #include <avr/interrupt.h>
 
