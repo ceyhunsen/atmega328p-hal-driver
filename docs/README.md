@@ -1,12 +1,12 @@
 # ATMega328P HAL Driver Documentation
 
 This directory doesn't include any meaningful documentation to the end users. It
-is here to generate nicely formatted code documentation. You can either generate
-them yourself or visit it online at:
-[atmega328p-hal-driver.readthedocs.io](https://atmega328p-hal-driver.readthedocs.io/en/latest/)
+is only here to generate nicely formatted code documentation with Doxygen. You
+can either generate them yourself or visit
+[atmega328p-hal-driver.readthedocs.io](https://atmega328p-hal-driver.readthedocs.io)
 
-Before generating documentation, ensure you have the git submodule for the
-theme:
+Before generating documentation, ensure you have [Doxygen](https://www.doxygen.nl/)
+installed and the git submodule for the theme is cloned:
 
 ```sh
 git submodule update --init
