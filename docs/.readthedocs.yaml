@@ -1,5 +1,5 @@
 version: 2
-formats: [html, pdf]
+formats: [pdf]
 
 build:
   os: ubuntu-22.04
