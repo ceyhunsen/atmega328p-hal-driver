@@ -6,9 +6,8 @@ build:
     python: "3.11"
   jobs:
     build:
-      doxygen:
-        - mkdir -p $READTHEDOCS_OUTPUT/htmlzip/
+      html:
         - cd docs
         - doxygen Doxyfile
-        - mv build/html/index.html index.zip
-        - cp -r build/html/* $READTHEDOCS_OUTPUT/htmlzip/
+    post_build:
+      - cp -r docs/build/html $READTHEDOCS_OUTPUT/html
