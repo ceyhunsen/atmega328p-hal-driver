@@ -1,13 +1,18 @@
-# ATmega328P HAL Drivers
+# ATmega328P HAL Driver
 
-Unofficial (not affiliated with Microchip in any way) hardware abstraction layer
-drivers for ATmega328P microcontroller. This driver aims to be suited for the
-general use instead of a specific project, while staying fast and small as
-possible.
+Unofficial hardware abstraction layer drivers for ATmega328P microcontroller.
+This driver aims to be suited for the general use instead of a specific project,
+while staying fast and small as possible.
+
+This driver depends on [avr-libc](https://www.nongnu.org/avr-libc/) and uses
+[avr-gcc](https://gcc.gnu.org/wiki/avr-gcc) as the compiler.
 
 > [!WARNING]
 >
 > This library is in it's early development. Use it with caution!
+
+Please beware that this work is **not affiliated** with Microchip (or AVR) in
+any way.
 
 ## Requirements
 

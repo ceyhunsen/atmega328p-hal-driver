@@ -8,8 +8,6 @@ build:
     pre_build:
       - cd docs; doxygen Doxyfile
     post_build:
-      - mkdir -p $READTHEDOCS_OUTPUT/html/
+      - pip install mkdocs-material
+      - mkdocs build --site-dir $READTHEDOCS_OUTPUT/html
       - cp -r docs/build/html $READTHEDOCS_OUTPUT/html
-
-sphinx:
-  configuration: docs/sphinx/conf.py
