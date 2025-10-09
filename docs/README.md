@@ -1,4 +1,4 @@
-# ATMega328P HAL Driver Documentation
+# ATmega328P HAL Driver Documentation
 
 This directory doesn't include any meaningful documentation to the end users. It
 is only here to generate nicely formatted code documentation with Doxygen. You
