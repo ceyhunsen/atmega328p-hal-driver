@@ -9,11 +9,11 @@ build:
   jobs:
     build:
       html:
-        - doxygen docs/Doxyfile
+        - cd docs && doxygen Doxyfile
         - mkdir -p $READTHEDOCS_OUTPUT/html/
-        - cp -r build/html/* $READTHEDOCS_OUTPUT/html
+        - cp -r docs/build/html/* $READTHEDOCS_OUTPUT/html
       pdf:
-        - doxygen docs/Doxyfile
-        - cd build/latex && make
+        - cd docs && doxygen Doxyfile
+        - cd docs/build/latex && make
         - mkdir -p $READTHEDOCS_OUTPUT/pdf/
-        - cp -r build/latex/refman.pdf $READTHEDOCS_OUTPUT/pdf/index.pdf
+        - cp -r docs/build/latex/refman.pdf $READTHEDOCS_OUTPUT/pdf/index.pdf
