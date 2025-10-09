@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
+# SPDX-License-Identifier: MIT
+
 cmake_minimum_required(VERSION 3.11)
 project(atmega328p_hal_driver VERSION 0.3 LANGUAGES C)
 
