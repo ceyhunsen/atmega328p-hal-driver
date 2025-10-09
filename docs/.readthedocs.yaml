@@ -11,7 +11,7 @@ build:
       html:
         - doxygen docs/Doxyfile
         - mkdir -p $READTHEDOCS_OUTPUT/html/
-        - cp -r build/html $READTHEDOCS_OUTPUT/html
+        - cp -r build/html/* $READTHEDOCS_OUTPUT/html
       pdf:
         - doxygen docs/Doxyfile
         - cd build/latex && make
