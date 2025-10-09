@@ -7,7 +7,8 @@ build:
   jobs:
     build:
       doxygen:
+        - mkdir -p $READTHEDOCS_OUTPUT/htmlzip/
         - cd docs
         - doxygen Doxyfile
-    post_build:
-      - cp -r docs/build/html $READTHEDOCS_OUTPUT/html
+        - mv build/html/index.html index.zip
+        - cp -r build/html/* $READTHEDOCS_OUTPUT/htmlzip/
