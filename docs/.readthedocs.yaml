@@ -8,5 +8,4 @@ build:
     build:
       html:
         - doxygen docs/Doxyfile
-    post_build:
-      - cp -r build/html $READTHEDOCS_OUTPUT/html
+        - cp -r build/html $READTHEDOCS_OUTPUT/html
