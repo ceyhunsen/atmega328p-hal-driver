@@ -79,6 +79,9 @@ cmake --build .
 make test
 ```
 
-## License
+## Contributing and License
+
+You are welcome to contribute to this project. But please read
+[CONTRIBUTING.md](CONTRIBUTING.md) beforehand.
 
 This project is licensed under the [MIT license](LICENSE).
