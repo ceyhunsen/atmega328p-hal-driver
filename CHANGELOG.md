@@ -25,7 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - How to run tests.
   - How to compile examples.
 - Tests and examples are built with CMake.
-- Tests run with CTest
+- Tests run with CTest.
+- Online docs are re-enabled and cleaned from Sphinx boilerplate (now is vanilla
+  Doxygen).
+- Module documentations are moved into header files.
 
 ### Fixed
 
