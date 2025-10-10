@@ -1,9 +1,8 @@
 /**
  * @file
  * @author Ceyhun Şen
- *
- * Main header file for ATmega328P HAL driver. This header file includes all HAL
- * functions.
+ * @brief Main header file for ATmega328P HAL driver. This header file includes
+ * all available HAL functions and types.
  * */
 
 // SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>

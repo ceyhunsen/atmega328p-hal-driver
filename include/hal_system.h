@@ -1,8 +1,7 @@
 /**
  * @file
  * @author Ceyhun Şen
- *
- * # System Control And Reset
+ * @brief System control and reset operations
  *
  * ## Capabilities
  *
@@ -14,20 +13,20 @@
  *
  * ## Configure Watchdog
  *
- * Watchdog can be configured using `system_set_watchdog()` function. This
+ * Watchdog can be configured using \ref system_set_watchdog() function. This
  * function will accept watchdog mode and cycle count as arguments in a struct,
- * called `struct system_watchdog_t`.
+ * called \ref system_watchdog_t.
  *
  * ## Reset Watchdog
  *
- * Watchdog counter can be reset using `system_reset_watchdog()` function. This
- * function will only call watchdog reset instruction, nothing more.
+ * Watchdog counter can be reset using \ref system_reset_watchdog() function.
+ * This function will only call watchdog reset instruction, nothing more.
  *
  * ## Get MCU Reset Status
  *
  * ATmega328P can enter reset state with different causes. This causes are
- * listed in `enum system_reset_status`. Also, cause can be retrieved using
- * `uint8_t system_get_reset_status()` function. These 2 can be combined to
+ * listed in \ref system_reset_status. Also, cause can be retrieved using
+ * \ref system_get_reset_status() function. These 2 can be combined to
  * examine reset cause.
  * */
 

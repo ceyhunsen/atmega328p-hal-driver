@@ -1,13 +1,12 @@
 /**
  * @file
  * @author Ceyhun Şen
- *
- * # Usart
+ * @brief Usart module
  *
  * ## Initializing USART
  *
- * USART can be initialized with `usart_init()` function after setting a valid
- * `struct usart_t` instance.
+ * USART can be initialized with \ref usart_init() function after setting a
+ * valid \ref usart_t instance.
  *
  * Code example:
  *
@@ -27,7 +26,8 @@
  *
  * ## Sending Data Over USART
  *
- * After initializing USART, data can be sent with `usart_transmit` function.
+ * After initializing USART, data can be sent with \ref usart_transmit()
+ * function.
  *
  * Code example:
  *
