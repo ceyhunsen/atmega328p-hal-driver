@@ -1,4 +1,4 @@
-# Git ignore file for ATMega328P HAL driver.
+# Git ignore file for ATmega328P HAL driver.
 
 # C build artifacts.
 *.o

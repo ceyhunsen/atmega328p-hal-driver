@@ -1,0 +1,20 @@
+version: 2
+formats: [pdf]
+
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.11"
+
+  jobs:
+    build:
+      html:
+        - git submodule update --init
+        - cd docs && doxygen Doxyfile
+        - mkdir -p $READTHEDOCS_OUTPUT/html/
+        - cp -r docs/build/html/* $READTHEDOCS_OUTPUT/html
+      pdf:
+        - cd docs && doxygen Doxyfile
+        - cd docs/build/latex && make
+        - mkdir -p $READTHEDOCS_OUTPUT/pdf/
+        - cp -r docs/build/latex/refman.pdf $READTHEDOCS_OUTPUT/pdf/index.pdf

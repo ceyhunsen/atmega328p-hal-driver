@@ -1,18 +1,22 @@
-# ATmega328P HAL Drivers
+# ATmega328P HAL Driver
 
-Unofficial (not affiliated with Microchip in any way) hardware abstraction layer
-drivers for ATmega328P microcontroller. This driver aims to be suited for the
-general use instead of a specific project, while staying fast and small as
-possible.
+Unofficial hardware abstraction layer driver for the ATmega328P microcontroller.
+This driver aims to be suited for general use instead of a specific project or
+use while staying fast and small as possible.
+
+Please beware that this work is **not affiliated** with Microchip (or AVR) in
+any way.
 
 > [!WARNING]
 >
-> This library is in it's early development. Use it with caution!
+> This library is in it's early development and can change drastically before
+> v1.0. Use it with caution!
 
 ## Requirements
 
-AVR toolchain, including `avr-gcc` and `avr-libc` is needed to compile and test
-this project.
+AVR toolchain, including [avr-gcc](https://gcc.gnu.org/wiki/avr-gcc) and
+[avr-libc](https://www.nongnu.org/avr-libc/) are needed to compile and test this
+project.
 
 ```sh
 # For Ubuntu
@@ -50,15 +54,9 @@ and ready to be flashed to MCU.
 
 ## Documentation
 
-Documentation can be generated locally. In order to generate documentation, your
-system should have Doxygen installed.
-
-```sh
-cd docs/
-doxygen Doxyfile
-```
-
-Generated documents will be placed in `docs/build` directory.
+Code documentation is available online at [atmega328p-hal-driver.readthedocs.io](https://atmega328p-hal-driver.readthedocs.io).
+It can also be generated with `Doxygen`. Please see [docs/README.md](docs/README.md)
+for more information about this.
 
 ## Testing
 
@@ -81,6 +79,9 @@ cmake --build .
 make test
 ```
 
-## License
+## Contributing and License
+
+You are welcome to contribute to this project. But please read
+[CONTRIBUTING.md](CONTRIBUTING.md) beforehand.
 
 This project is licensed under the [MIT license](LICENSE).

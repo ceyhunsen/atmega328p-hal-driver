@@ -1,8 +1,33 @@
 /**
  * @file
  * @author Ceyhun Şen
+ * @brief System control and reset operations
  *
- * @brief System control and reset module header file.
+ * ## Capabilities
+ *
+ * - Configure watchdog:
+ *   - Set mode.
+ *   - Set cycles.
+ * - Reset watchdog.
+ * - Get MCU reset status.
+ *
+ * ## Configure Watchdog
+ *
+ * Watchdog can be configured using \ref system_set_watchdog() function. This
+ * function will accept watchdog mode and cycle count as arguments in a struct,
+ * called \ref system_watchdog_t.
+ *
+ * ## Reset Watchdog
+ *
+ * Watchdog counter can be reset using \ref system_reset_watchdog() function.
+ * This function will only call watchdog reset instruction, nothing more.
+ *
+ * ## Get MCU Reset Status
+ *
+ * ATmega328P can enter reset state with different causes. This causes are
+ * listed in \ref system_reset_status. Also, cause can be retrieved using
+ * \ref system_get_reset_status() function. These 2 can be combined to
+ * examine reset cause.
  * */
 
 // SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>

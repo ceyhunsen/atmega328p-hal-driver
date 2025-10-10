@@ -1,8 +1,23 @@
 /**
  * @file
  * @author Ceyhun Şen
+ * @brief Power management and sleep modes
  *
- * @brief Power management and sleep modes module header file.
+ * ## Capabilities
+ *
+ * - Set various sleep modes
+ * - Enable/disable individual peripherals
+ *
+ * ## Sleep Modes
+ *
+ * There are a bunch of sleep modes, defined in #power_sleep_modes. These
+ * sleep modes can be selected with power_set_sleep_mode() function.
+ *
+ * ## Module Enable/Disable
+ *
+ * Modules can be enabled or disabled individually using
+ * power_set_module_power() function. Possible candidates are listed in
+ * #power_modules.
  * */
 
 // SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
