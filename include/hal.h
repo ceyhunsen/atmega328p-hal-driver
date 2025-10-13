@@ -1,11 +1,11 @@
 /**
  * @file
  * @author Ceyhun Şen
- * @brief Main header file for ATmega328P HAL driver. This header file includes
- * all available HAL functions and types.
+ * @brief ATmega328P HAL driver. This header file includes all available HAL
+ * functions and types.
  * */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #ifndef __HAL_H
@@ -16,6 +16,7 @@
 extern "C" {
 #endif // __cplusplus
 
+#include "hal_clock.h"
 #include "hal_power.h"
 
 // C++ compatibility.

@@ -3,10 +3,15 @@
  * @author Ceyhun Şen
  * @brief Configure system clock.
  *
+ * ## Capabilities
+ *
+ * - View and change oscillator calibration.
+ *
  * ## Setting Clock Source
  *
- * Clock source can be set
- *
+ * Clock source must be set at compile time. Please visit
+ * https://www.nongnu.org/avr-libc/user-manual/group__avr__fuse.html for more
+ * details and set it according to the ATmega328P datasheet.
  * */
 
 // SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
@@ -15,19 +20,17 @@
 #ifndef __HAL_CLOCK_H
 #define __HAL_CLOCK_H
 
+#include <stdint.h>
+
 /**
- * @enum clock_source
- * @brief Possible clock sources.
+ * @struct hal_clock_oscillator_calibration
+ * @brief Oscillator calibration value with it's range specified.
  */
-enum clock_source {
-    clock_external_clock = 0b0000,
-    clock_calibrated_internal_rc_oscillator = 0b0010,
-    clock_internal_128khz_rc_oscillator = 0b0011,
-    clock_low_frequency_crystal_oscillator = 0b0100,
-    clock_full_swing_crystal_oscillator = 0b0110,
-    clock_low_power_crystal_oscillator = 0b1000,
+struct hal_clock_oscillator_calibration {
+    uint8_t range : 1;
+    uint8_t calibration_value : 7;
 };
 
-void clock_set_source(enum clock_source source);
+struct hal_clock_oscillator_calibration hal_clock_read_oscillator_calibration();
 
 #endif // __HAL_CLOCK_H
