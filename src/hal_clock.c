@@ -21,8 +21,8 @@ hal_clock_read_oscillator_calibration() {
     uint8_t raw = OSCCAL;
 
     struct hal_clock_oscillator_calibration calibration_val = {
-        .range = raw & (1 << 8),
-        .calibration_value = raw & ((1 << 8) - 1),
+        .range = (raw >> 7) & 1,
+        .calibration_value = raw & ((1 << 7) - 1),
     };
 
     return calibration_val;
