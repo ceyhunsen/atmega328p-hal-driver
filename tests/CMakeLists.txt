@@ -42,6 +42,7 @@ endfunction()
 add_test_target("${UNIT_DIR}/hal.c")
 add_test_target("${UNIT_DIR}/mock.c")
 
+add_test_target("${UNIT_DIR}/clock.c")
 add_test_target("${UNIT_DIR}/power.c")
 # add_test_target("${UNIT_DIR}/system.c")
 # add_test_target("${UNIT_DIR}/io.c")
