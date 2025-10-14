@@ -32,5 +32,7 @@ struct hal_clock_oscillator_calibration {
 };
 
 struct hal_clock_oscillator_calibration hal_clock_read_oscillator_calibration();
+void hal_clock_write_oscillator_calibration_value(
+    struct hal_clock_oscillator_calibration value);
 
 #endif // __HAL_CLOCK_H

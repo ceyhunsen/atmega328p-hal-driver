@@ -27,3 +27,12 @@ hal_clock_read_oscillator_calibration() {
 
     return calibration_val;
 }
+
+/**
+ * @brief Changes calibration value of the internal
+ * @param value New calibration range and value.
+ */
+void hal_clock_write_oscillator_calibration_value(
+    struct hal_clock_oscillator_calibration value) {
+    OSCCAL = (value.range << 7) | (value.calibration_value);
+}
