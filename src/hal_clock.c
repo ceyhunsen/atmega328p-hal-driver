@@ -11,6 +11,7 @@
 #include "hal_clock.h"
 
 #include <avr/io.h>
+#include <avr/sfr_defs.h>
 
 /**
  * @brief Returns current oscillator calibration value.
@@ -29,10 +30,23 @@ hal_clock_read_oscillator_calibration() {
 }
 
 /**
- * @brief Changes calibration value of the internal
+ * @brief Changes calibration value of the internal.
  * @param value New calibration range and value.
  */
 void hal_clock_write_oscillator_calibration_value(
     struct hal_clock_oscillator_calibration value) {
     OSCCAL = (value.range << 7) | (value.calibration_value);
+}
+
+/**
+ * @brief Changes clock prescaler.
+ * @param divisor Division value up to 256.
+ */
+void change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor) {
+    // Enable prescaler.
+    CLKPR = 1 << 7;
+    loop_until_bit_is_clear(CLKPR, 7);
+
+    // Write divisor.
+    CLKPR = 1 << divisor;
 }
