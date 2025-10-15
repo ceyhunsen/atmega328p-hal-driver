@@ -39,11 +39,20 @@ void hal_clock_write_oscillator_calibration_value(
 }
 
 /**
+ * @brief Returns current prescaler value.
+ * @return Current prescaler value in #hal_clock_prescaler_division_rates type.
+ */
+enum hal_clock_prescaler_division_rates hal_clock_get_clock_prescaler() {
+    return (enum hal_clock_prescaler_division_rates)CLKPR;
+}
+
+/**
  * @brief Changes clock prescaler.
  * @param divisor Division value up to 256.
  * @return 0 if divisor is in range, 1 if not in range.
  */
-int change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor) {
+int hal_clock_change_clock_prescaler(
+    enum hal_clock_prescaler_division_rates divisor) {
     if (divisor > hal_clock_prescaler_256) {
         return 1;
     }

@@ -6,6 +6,7 @@
  * ## Capabilities
  *
  * - View and change oscillator calibration.
+ * - View and change prescaler divisor for input clock.
  *
  * ## Setting Clock Source
  *
@@ -57,6 +58,8 @@ enum hal_clock_prescaler_division_rates {
     hal_clock_prescaler_256,
 };
 
-int change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor);
+enum hal_clock_prescaler_division_rates hal_clock_get_clock_prescaler();
+int hal_clock_change_clock_prescaler(
+    enum hal_clock_prescaler_division_rates divisor);
 
 #endif // __HAL_CLOCK_H
