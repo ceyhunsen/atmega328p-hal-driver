@@ -11,6 +11,7 @@
 #include "unity.h"
 
 #include <avr/io.h>
+#include <avr/sfr_defs.h>
 #include <stdint.h>
 #include <test_mock_up.h>
 
@@ -111,10 +112,60 @@ void test_write_and_read_osccal() {
     }
 }
 
+//! Resets CLKPR register if prescaler is initialized.
+void *reset_clkpr() {
+    while (1) {
+        loop_until_bit_is_set(CLKPR, 7);
+
+        // Check if other bits are 0 while enable bit is 1.
+        int i, is_set = 0;
+        for (i = 0; i < 7; i++) {
+            if (bit_is_set(CLKPR, i)) {
+                is_set = i + 1;
+            }
+        }
+        if (is_set) {
+            continue;
+        }
+
+        CLKPR = 0;
+    }
+
+    return NULL;
+}
+void test_change_and_read_clock_prescaler() {
+    spawn_watcher_thread(reset_clkpr);
+
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_1), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b0);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_2), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b1);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_4), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b10);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_8), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b11);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_16), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b100);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_32), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b101);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_64), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b110);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_128), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b111);
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_256), 0);
+    TEST_ASSERT_EQUAL(CLKPR, 0b1000);
+
+    // Passing a value bigger should return error and register should stay the
+    // same.
+    TEST_ASSERT_EQUAL(change_clock_prescaler(hal_clock_prescaler_256 + 1), 1);
+    TEST_ASSERT_EQUAL(CLKPR, 0b1000);
+}
+
 int main() {
     RUN_TEST(test_read_and_parse_osccal);
     RUN_TEST(test_calibration_struct_size);
     RUN_TEST(test_write_and_read_osccal);
+    RUN_TEST(test_change_and_read_clock_prescaler);
 
     return UnityEnd();
 }
