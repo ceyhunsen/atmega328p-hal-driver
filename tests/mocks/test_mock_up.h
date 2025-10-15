@@ -10,6 +10,11 @@
 #ifndef __TEST_MOCK_UP_H
 #define __TEST_MOCK_UP_H
 
+#include <stdint.h>
+
+extern uint8_t __atmega328p_registers[0xFF];
+
 void reset_registers();
+void spawn_watcher_thread(void *(*handler)());
 
 #endif // __TEST_MOCK_UP_H

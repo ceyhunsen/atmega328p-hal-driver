@@ -79,6 +79,8 @@ cmake --build .
 make test
 ```
 
+Or, you can call `make test` in the root directory for an easier experience.
+
 ## Contributing and License
 
 You are welcome to contribute to this project. But please read
