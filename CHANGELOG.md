@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Test
 - Support for CMake.
 - SPDX identifiers for each source file.
+- Clock module.
+- Threaded register and interrupt watcher for tests.
 
 ### Changed
 
