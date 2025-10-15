@@ -41,12 +41,19 @@ void hal_clock_write_oscillator_calibration_value(
 /**
  * @brief Changes clock prescaler.
  * @param divisor Division value up to 256.
+ * @return 0 if divisor is in range, 1 if not in range.
  */
-void change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor) {
+int change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor) {
+    if (divisor > hal_clock_prescaler_256) {
+        return 1;
+    }
+
     // Enable prescaler.
     CLKPR = 1 << 7;
     loop_until_bit_is_clear(CLKPR, 7);
 
     // Write divisor.
-    CLKPR = 1 << divisor;
+    CLKPR = divisor;
+
+    return 0;
 }

@@ -57,6 +57,6 @@ enum hal_clock_prescaler_division_rates {
     hal_clock_prescaler_256,
 };
 
-void change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor);
+int change_clock_prescaler(enum hal_clock_prescaler_division_rates divisor);
 
 #endif // __HAL_CLOCK_H
