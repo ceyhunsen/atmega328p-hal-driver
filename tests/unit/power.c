@@ -4,12 +4,13 @@
  * @brief Unit tests for power management and sleep modes module.
  */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_power.h"
 #include "test_mock_up.h"
 #include "unity.h"
+
 #include <avr/io.h>
 
 void test_power_idle_mode() {

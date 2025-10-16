@@ -5,7 +5,7 @@
  * @brief Power management and sleep modes module, main functionalities.
  * */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_power.h"
