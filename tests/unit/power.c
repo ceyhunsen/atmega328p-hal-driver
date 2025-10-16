@@ -13,11 +13,11 @@
 #include <avr/io.h>
 
 void test_power_idle_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_idle_mode;
+    mode = hal_power_idle_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b000 << 1, SMCR & 0b1110);
@@ -30,11 +30,11 @@ void test_power_idle_mode() {
 }
 
 void test_power_adc_noise_reduction_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_adc_noise_reduction_mode;
+    mode = hal_power_adc_noise_reduction_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b001 << 1, SMCR & 0b1110);
@@ -47,11 +47,11 @@ void test_power_adc_noise_reduction_mode() {
 }
 
 void test_power_power_down_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_power_down_mode;
+    mode = hal_power_power_down_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b010 << 1, SMCR & 0b1110);
@@ -64,11 +64,11 @@ void test_power_power_down_mode() {
 }
 
 void test_power_power_save_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_power_save_mode;
+    mode = hal_power_power_save_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b011 << 1, SMCR & 0b1110);
@@ -81,11 +81,11 @@ void test_power_power_save_mode() {
 }
 
 void test_power_standby_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_standby_mode;
+    mode = hal_power_standby_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b110 << 1, SMCR & 0b1110);
@@ -98,11 +98,11 @@ void test_power_standby_mode() {
 }
 
 void test_power_external_standby_mode() {
-    enum power_sleep_modes mode;
+    enum hal_power_sleep_modes mode;
 
-    mode = power_external_standby_mode;
+    mode = hal_power_external_standby_mode;
 
-    power_set_sleep_mode(mode);
+    hal_power_set_sleep_mode(mode);
 
     // Test if register value is correct.
     TEST_ASSERT_EQUAL(0b111 << 1, SMCR & 0b1110);
@@ -119,11 +119,12 @@ void test_power_external_standby_mode() {
  * a module is turned on, bit value should be 0 for respective bit.
  */
 void test_module_power_single() {
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(i, 1);
+    enum hal_power_modules i;
+    for (i = 0; i < 8; i++) {
+        hal_power_set_module_power(i, 1);
         TEST_ASSERT_EQUAL(0, PRR);
 
-        power_set_module_power(i, 0);
+        hal_power_set_module_power(i, 0);
         TEST_ASSERT_EQUAL(1 << i, PRR);
 
         reset_registers();
@@ -138,11 +139,12 @@ void test_module_power_multi() {
     uint8_t reg = 0;
 
     // Start from beginning.
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(i, 1);
+    enum hal_power_modules i;
+    for (i = 0; i < 8; i++) {
+        hal_power_set_module_power(i, 1);
         TEST_ASSERT_EQUAL(0, PRR & (1 << i));
 
-        power_set_module_power(i, 0);
+        hal_power_set_module_power(i, 0);
         TEST_ASSERT_EQUAL(reg | (1 << i), PRR);
 
         reg = PRR;
@@ -152,11 +154,11 @@ void test_module_power_multi() {
     reset_registers();
 
     // Start from last.
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(7 - i, 1);
+    for (i = 0; i < 8; i++) {
+        hal_power_set_module_power(7 - i, 1);
         TEST_ASSERT_EQUAL(0, PRR & (1 << (7 - i)));
 
-        power_set_module_power(7 - i, 0);
+        hal_power_set_module_power(7 - i, 0);
         TEST_ASSERT_EQUAL(reg | (1 << (7 - i)), PRR);
 
         reg = PRR;
