@@ -17,7 +17,11 @@
  * @brief Set sleep mode for ATmega328P.
  * @param mode Sleep mode to be set.
  */
-void hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
+int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
+    if (mode > 0b111) {
+        return 1;
+    }
+
     // Assign new mode. Other bits of the register should be 0.
     SMCR = mode << 1;
 

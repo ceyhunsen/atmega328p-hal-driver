@@ -115,6 +115,19 @@ void test_power_external_standby_mode() {
     TEST_ASSERT_EQUAL(0, SMCR & 0b1);
 }
 
+void test_power_set_sleep_mode_incorrect_input() {
+    enum hal_power_sleep_modes incorrect_mode;
+    incorrect_mode = (1 << 8) - 1;
+
+    TEST_ASSERT_EQUAL(0, SMCR);
+
+    uint8_t initial_value = SMCR;
+
+    hal_power_set_sleep_mode(incorrect_mode);
+
+    TEST_ASSERT_EQUAL(initial_value, SMCR);
+}
+
 /**
  * Test if modules are turned on/off when every other module is turned on. When
  * a module is turned on, bit value should be 0 for respective bit.
@@ -177,6 +190,7 @@ int main() {
     RUN_TEST(test_power_external_standby_mode);
     RUN_TEST(test_module_power_single);
     RUN_TEST(test_module_power_multi);
+    RUN_TEST(test_power_set_sleep_mode_incorrect_input);
 
     return UnityEnd();
 }
