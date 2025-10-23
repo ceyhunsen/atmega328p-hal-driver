@@ -18,7 +18,16 @@
  * @param mode Sleep mode to be set.
  */
 int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
-    if (mode > 0b111) {
+    // Check if only legal values are passed.
+    switch (mode) {
+    case hal_power_idle_mode:
+    case hal_power_adc_noise_reduction_mode:
+    case hal_power_power_down_mode:
+    case hal_power_power_save_mode:
+    case hal_power_standby_mode:
+    case hal_power_external_standby_mode:
+        break;
+    default:
         return 1;
     }
 
@@ -31,6 +40,8 @@ int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
 
     // Clear sleep flag after sleep.
     CLEAR_BIT(SMCR, SE);
+
+    return 0;
 }
 
 /**

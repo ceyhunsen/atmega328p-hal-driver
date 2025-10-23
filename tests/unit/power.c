@@ -13,106 +13,27 @@
 
 #include <avr/io.h>
 
-void test_power_idle_mode() {
+void test_sleep_mode() {
     enum hal_power_sleep_modes mode;
+    for (mode = hal_power_idle_mode; mode <= hal_power_external_standby_mode;
+         mode++) {
+        int ret = hal_power_set_sleep_mode(mode);
 
-    mode = hal_power_idle_mode;
+        // For illegal values between the max and min values, check if it
+        // errors out.
+        if (mode != 4 && mode != 5) {
+            TEST_ASSERT_EQUAL(ret, 0);
+        } else {
+            TEST_ASSERT_EQUAL(ret, 1);
+            continue;
+        }
 
-    hal_power_set_sleep_mode(mode);
+        // Test if enum value is same as the register value.
+        TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
 
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b000 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_adc_noise_reduction_mode() {
-    enum hal_power_sleep_modes mode;
-
-    mode = hal_power_adc_noise_reduction_mode;
-
-    hal_power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b001 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_power_down_mode() {
-    enum hal_power_sleep_modes mode;
-
-    mode = hal_power_power_down_mode;
-
-    hal_power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b010 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_power_save_mode() {
-    enum hal_power_sleep_modes mode;
-
-    mode = hal_power_power_save_mode;
-
-    hal_power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b011 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_standby_mode() {
-    enum hal_power_sleep_modes mode;
-
-    mode = hal_power_standby_mode;
-
-    hal_power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b110 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_external_standby_mode() {
-    enum hal_power_sleep_modes mode;
-
-    mode = hal_power_external_standby_mode;
-
-    hal_power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b111 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
+        // Test if sleep enable bit is disabled after the change.
+        TEST_ASSERT_EQUAL(0, SMCR & 0b1);
+    }
 }
 
 void test_power_set_sleep_mode_incorrect_input() {
@@ -182,12 +103,7 @@ void test_module_power_multi() {
 }
 
 int main() {
-    RUN_TEST(test_power_idle_mode);
-    RUN_TEST(test_power_adc_noise_reduction_mode);
-    RUN_TEST(test_power_power_down_mode);
-    RUN_TEST(test_power_power_save_mode);
-    RUN_TEST(test_power_standby_mode);
-    RUN_TEST(test_power_external_standby_mode);
+    RUN_TEST(test_sleep_mode);
     RUN_TEST(test_module_power_single);
     RUN_TEST(test_module_power_multi);
     RUN_TEST(test_power_set_sleep_mode_incorrect_input);
