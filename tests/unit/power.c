@@ -119,11 +119,42 @@ void test_module_power_multi() {
     // No random order testing.
 }
 
+void test_change_module_powers_reserved_value() {
+    uint8_t power_off, power_on;
+
+    power_off = BIT(4);
+    power_on = 0;
+    TEST_ASSERT_EQUAL(1, hal_power_change_module_powers(power_off, power_on));
+
+    power_off = 0;
+    power_on = BIT(4);
+    TEST_ASSERT_EQUAL(1, hal_power_change_module_powers(power_off, power_on));
+
+    power_off = BIT(4);
+    power_on = BIT(4);
+    TEST_ASSERT_EQUAL(1, hal_power_change_module_powers(power_off, power_on));
+}
+
+void test_change_module_powers_same_bit() {
+    int i;
+
+    for (i = 0; i < 1 << 8; i++) {
+        if (i & BIT(4)) {
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(
+            1, hal_power_change_module_powers((uint8_t)i, (uint8_t)i));
+    }
+}
+
 int main() {
     RUN_TEST(test_sleep_mode);
     RUN_TEST(test_module_power_single);
     RUN_TEST(test_module_power_multi);
     RUN_TEST(test_power_set_sleep_mode_incorrect_input);
+    RUN_TEST(test_change_module_powers_reserved_value);
+    RUN_TEST(test_change_module_powers_same_bit);
 
     return UnityEnd();
 }
