@@ -73,3 +73,23 @@ int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
 
     return 0;
 }
+
+/**
+ * @brief Changes multiple module powers at one go, using given lists. Use
+ * #hal_power_modules to generate power on and off lists.
+ * @param power_off_list Modules to power off. Set specific bit to 1 to do that.
+ * @param power_on_list Modules to power on. Set specific bit to 1 to do that.
+ * @returns 0 if successful. 1 if there is a problem.
+ */
+int hal_power_change_module_powers(uint8_t power_off_list,
+                                   uint8_t power_on_list) {
+    // Check if the reserved bit is used.
+    if (power_off_list == BIT(4) || power_on_list == BIT(4)) {
+        return 1;
+    }
+
+    // Check if power off and on lists has same bit set.
+    if (!(power_off_list ^ power_on_list)) {
+        return 1;
+    }
+}
