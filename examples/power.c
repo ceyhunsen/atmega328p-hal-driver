@@ -19,15 +19,15 @@ int main() {
     hal_power_set_sleep_mode(sleep_mode);
 
     // Disabling ADC.
-    module = power_adc;
+    module = hal_power_adc;
     hal_power_set_module_power(module, 0);
 
     // Disabling SPI.
-    module = power_spi;
+    module = hal_power_spi;
     hal_power_set_module_power(module, 0);
 
     // Enabling SPI.
-    module = power_spi;
+    module = hal_power_spi;
     hal_power_set_module_power(module, 1);
 
     return 0;

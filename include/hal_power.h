@@ -46,13 +46,13 @@ enum hal_power_sleep_modes {
  * as the bit number in target register.
  * */
 enum hal_power_modules {
-    power_adc = 0,
-    power_usart0 = 1,
-    power_spi = 2,
-    power_timer_1 = 3,
-    power_timer0 = 5,
-    power_timer_2 = 6,
-    power_twi = 7
+    hal_power_adc = 0,
+    hal_power_usart0 = 1,
+    hal_power_spi = 2,
+    hal_power_timer_1 = 3,
+    hal_power_timer0 = 5,
+    hal_power_timer_2 = 6,
+    hal_power_twi = 7
 };
 
 int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode);

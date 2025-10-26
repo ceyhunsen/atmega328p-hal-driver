@@ -54,13 +54,13 @@ int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
 int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
     // Check for reserved or illegal values.
     switch (module) {
-    case power_adc:
-    case power_usart0:
-    case power_spi:
-    case power_timer_1:
-    case power_timer0:
-    case power_timer_2:
-    case power_twi:
+    case hal_power_adc:
+    case hal_power_usart0:
+    case hal_power_spi:
+    case hal_power_timer_1:
+    case hal_power_timer0:
+    case hal_power_timer_2:
+    case hal_power_twi:
         break;
     default:
         return 1;
