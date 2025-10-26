@@ -11,6 +11,9 @@
 #ifndef __SLEEP_H
 #define __SLEEP_H
 
-#define sleep_cpu()
+/// Callback function to check for things if there are things needed to be done
+/// after the sleep instruction. Needs to be defined per test file.
+void sleep_callback();
+#define sleep_cpu() sleep_callback()
 
 #endif // __SLEEP_H

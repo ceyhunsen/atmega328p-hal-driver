@@ -21,16 +21,15 @@ committing. Your PR will be checked against the default formatter by CI.
 
 ## Naming Conventions
 
-* Module names follows ATmega328P data-sheet conventions. Although, longer names
-  might be shortened.
-* All of the namings are in `snake_case`, except for the constants: they are in
-  `SCREAMING_SNAKE_CASE`.
-* All file names includes `hal_` prefix (e.g.: `hal_usart.c`).
-* All functions, structs, enums and enum members includes it's module name
-  prefix (e.g.: `usart_transmit()` or `struct usart_t`). You shouldn't put
-  `hal_` prefix to the beginning of such because it will lengthen the names
-  significantly and possibility of a user program having a module named as same
-  as the modules in this project is low.
+* Module names should follow ATmega328P data-sheet conventions. Although, longer
+  names might be shortened.
+* All of the namings should be in `snake_case`, except for the constants.
+  Constants should be in `SCREAMING_SNAKE_CASE`.
+* All file names, functions, structs, enums and enum members should include
+  `hal_` prefix (e.g.: `hal_usart.c` or `hal_usart_transmit()`).
+* All functions, structs, enums and enum members should also include it's module
+  name as prefix after the `hal_` prefix (e.g.: `hal_usart_transmit()` or
+  `struct hal_usart_t`).
 
 ## Module Hierarchy
 

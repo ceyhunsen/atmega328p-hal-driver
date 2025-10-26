@@ -5,11 +5,12 @@
  * @brief Power management and sleep modes module, main functionalities.
  * */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_power.h"
 #include "hal_internals.h"
+
 #include <avr/io.h>
 #include <avr/sleep.h>
 
@@ -17,7 +18,20 @@
  * @brief Set sleep mode for ATmega328P.
  * @param mode Sleep mode to be set.
  */
-void power_set_sleep_mode(enum power_sleep_modes mode) {
+int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
+    // Check if only legal values are passed.
+    switch (mode) {
+    case hal_power_idle_mode:
+    case hal_power_adc_noise_reduction_mode:
+    case hal_power_power_down_mode:
+    case hal_power_power_save_mode:
+    case hal_power_standby_mode:
+    case hal_power_external_standby_mode:
+        break;
+    default:
+        return 1;
+    }
+
     // Assign new mode. Other bits of the register should be 0.
     SMCR = mode << 1;
 
@@ -27,6 +41,8 @@ void power_set_sleep_mode(enum power_sleep_modes mode) {
 
     // Clear sleep flag after sleep.
     CLEAR_BIT(SMCR, SE);
+
+    return 0;
 }
 
 /**
@@ -35,9 +51,25 @@ void power_set_sleep_mode(enum power_sleep_modes mode) {
  * @param module Module name.
  * @param state 1 (or any other positive number) for on, 0 for off.
  * */
-void power_set_module_power(enum power_modules module, uint8_t state) {
+int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
+    // Check for reserved or illegal values.
+    switch (module) {
+    case hal_power_adc:
+    case hal_power_usart0:
+    case hal_power_spi:
+    case hal_power_timer_1:
+    case hal_power_timer0:
+    case hal_power_timer_2:
+    case hal_power_twi:
+        break;
+    default:
+        return 1;
+    }
+
     if (state)
         CLEAR_BIT(PRR, module);
     else
         SET_BIT(PRR, module);
+
+    return 0;
 }

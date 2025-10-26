@@ -4,114 +4,51 @@
  * @brief Unit tests for power management and sleep modes module.
  */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
+#include "hal_internals.h"
 #include "hal_power.h"
 #include "test_mock_up.h"
 #include "unity.h"
+
 #include <avr/io.h>
 
-void test_power_idle_mode() {
-    enum power_sleep_modes mode;
+void sleep_callback() { TEST_ASSERT_EQUAL(1, SMCR & BIT(SE)); }
+void test_sleep_mode() {
+    enum hal_power_sleep_modes mode;
+    for (mode = hal_power_idle_mode; mode <= hal_power_external_standby_mode;
+         mode++) {
+        int ret = hal_power_set_sleep_mode(mode);
 
-    mode = power_idle_mode;
+        // For illegal values between the max and min values, check if it
+        // errors out.
+        if (mode != 4 && mode != 5) {
+            TEST_ASSERT_EQUAL(ret, 0);
+        } else {
+            TEST_ASSERT_EQUAL(ret, 1);
+            continue;
+        }
 
-    power_set_sleep_mode(mode);
+        // Test if enum value is same as the register value.
+        TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
 
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b000 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
+        // Test if sleep enable bit is disabled after the change.
+        TEST_ASSERT_EQUAL(0, SMCR & BIT(SE));
+    }
 }
 
-void test_power_adc_noise_reduction_mode() {
-    enum power_sleep_modes mode;
+void test_power_set_sleep_mode_incorrect_input() {
+    enum hal_power_sleep_modes incorrect_mode;
+    incorrect_mode = (1 << 8) - 1;
 
-    mode = power_adc_noise_reduction_mode;
+    TEST_ASSERT_EQUAL(0, SMCR);
 
-    power_set_sleep_mode(mode);
+    uint8_t initial_value = SMCR;
 
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b001 << 1, SMCR & 0b1110);
+    hal_power_set_sleep_mode(incorrect_mode);
 
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_power_down_mode() {
-    enum power_sleep_modes mode;
-
-    mode = power_power_down_mode;
-
-    power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b010 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_power_save_mode() {
-    enum power_sleep_modes mode;
-
-    mode = power_power_save_mode;
-
-    power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b011 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_standby_mode() {
-    enum power_sleep_modes mode;
-
-    mode = power_standby_mode;
-
-    power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b110 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
-}
-
-void test_power_external_standby_mode() {
-    enum power_sleep_modes mode;
-
-    mode = power_external_standby_mode;
-
-    power_set_sleep_mode(mode);
-
-    // Test if register value is correct.
-    TEST_ASSERT_EQUAL(0b111 << 1, SMCR & 0b1110);
-
-    // Test if enum value is the same with register value.
-    TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
-
-    // Test if sleep enable bit is disabled.
-    TEST_ASSERT_EQUAL(0, SMCR & 0b1);
+    TEST_ASSERT_EQUAL(initial_value, SMCR);
 }
 
 /**
@@ -119,11 +56,17 @@ void test_power_external_standby_mode() {
  * a module is turned on, bit value should be 0 for respective bit.
  */
 void test_module_power_single() {
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(i, 1);
+    enum hal_power_modules i;
+    for (i = 0; i < 8; i++) {
+        if (i == 4) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 1));
         TEST_ASSERT_EQUAL(0, PRR);
 
-        power_set_module_power(i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 0));
         TEST_ASSERT_EQUAL(1 << i, PRR);
 
         reset_registers();
@@ -138,11 +81,17 @@ void test_module_power_multi() {
     uint8_t reg = 0;
 
     // Start from beginning.
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(i, 1);
+    enum hal_power_modules i;
+    for (i = 0; i < 8; i++) {
+        if (i == 4) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 1));
         TEST_ASSERT_EQUAL(0, PRR & (1 << i));
 
-        power_set_module_power(i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 0));
         TEST_ASSERT_EQUAL(reg | (1 << i), PRR);
 
         reg = PRR;
@@ -152,11 +101,16 @@ void test_module_power_multi() {
     reset_registers();
 
     // Start from last.
-    for (enum power_modules i = 0; i < 8; i++) {
-        power_set_module_power(7 - i, 1);
+    for (i = 0; i < 8; i++) {
+        if (i == 3) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(7 - i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(7 - i, 1));
         TEST_ASSERT_EQUAL(0, PRR & (1 << (7 - i)));
 
-        power_set_module_power(7 - i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(7 - i, 0));
         TEST_ASSERT_EQUAL(reg | (1 << (7 - i)), PRR);
 
         reg = PRR;
@@ -166,14 +120,10 @@ void test_module_power_multi() {
 }
 
 int main() {
-    RUN_TEST(test_power_idle_mode);
-    RUN_TEST(test_power_adc_noise_reduction_mode);
-    RUN_TEST(test_power_power_down_mode);
-    RUN_TEST(test_power_power_save_mode);
-    RUN_TEST(test_power_standby_mode);
-    RUN_TEST(test_power_external_standby_mode);
+    RUN_TEST(test_sleep_mode);
     RUN_TEST(test_module_power_single);
     RUN_TEST(test_module_power_multi);
+    RUN_TEST(test_power_set_sleep_mode_incorrect_input);
 
     return UnityEnd();
 }
