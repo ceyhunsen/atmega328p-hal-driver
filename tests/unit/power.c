@@ -7,12 +7,14 @@
 // SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
+#include "hal_internals.h"
 #include "hal_power.h"
 #include "test_mock_up.h"
 #include "unity.h"
 
 #include <avr/io.h>
 
+void sleep_callback() { TEST_ASSERT_EQUAL(1, SMCR & BIT(SE)); }
 void test_sleep_mode() {
     enum hal_power_sleep_modes mode;
     for (mode = hal_power_idle_mode; mode <= hal_power_external_standby_mode;
@@ -32,7 +34,7 @@ void test_sleep_mode() {
         TEST_ASSERT_EQUAL(mode << 1, SMCR & 0b1110);
 
         // Test if sleep enable bit is disabled after the change.
-        TEST_ASSERT_EQUAL(0, SMCR & 0b1);
+        TEST_ASSERT_EQUAL(0, SMCR & BIT(SE));
     }
 }
 
