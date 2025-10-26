@@ -58,10 +58,15 @@ void test_power_set_sleep_mode_incorrect_input() {
 void test_module_power_single() {
     enum hal_power_modules i;
     for (i = 0; i < 8; i++) {
-        hal_power_set_module_power(i, 1);
+        if (i == 4) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 1));
         TEST_ASSERT_EQUAL(0, PRR);
 
-        hal_power_set_module_power(i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 0));
         TEST_ASSERT_EQUAL(1 << i, PRR);
 
         reset_registers();
@@ -78,10 +83,15 @@ void test_module_power_multi() {
     // Start from beginning.
     enum hal_power_modules i;
     for (i = 0; i < 8; i++) {
-        hal_power_set_module_power(i, 1);
+        if (i == 4) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 1));
         TEST_ASSERT_EQUAL(0, PRR & (1 << i));
 
-        hal_power_set_module_power(i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(i, 0));
         TEST_ASSERT_EQUAL(reg | (1 << i), PRR);
 
         reg = PRR;
@@ -92,10 +102,15 @@ void test_module_power_multi() {
 
     // Start from last.
     for (i = 0; i < 8; i++) {
-        hal_power_set_module_power(7 - i, 1);
+        if (i == 3) {
+            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(7 - i, 1));
+            continue;
+        }
+
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(7 - i, 1));
         TEST_ASSERT_EQUAL(0, PRR & (1 << (7 - i)));
 
-        hal_power_set_module_power(7 - i, 0);
+        TEST_ASSERT_EQUAL(0, hal_power_set_module_power(7 - i, 0));
         TEST_ASSERT_EQUAL(reg | (1 << (7 - i)), PRR);
 
         reg = PRR;

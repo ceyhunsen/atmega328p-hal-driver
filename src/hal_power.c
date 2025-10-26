@@ -10,6 +10,7 @@
 
 #include "hal_power.h"
 #include "hal_internals.h"
+
 #include <avr/io.h>
 #include <avr/sleep.h>
 
@@ -50,9 +51,16 @@ int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
  * @param module Module name.
  * @param state 1 (or any other positive number) for on, 0 for off.
  * */
-void hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
+int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
+    // Check for illegal values.
+    if (module == 4 || module > power_twi) {
+        return 1;
+    }
+
     if (state)
         CLEAR_BIT(PRR, module);
     else
         SET_BIT(PRR, module);
+
+    return 0;
 }

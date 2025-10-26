@@ -56,6 +56,6 @@ enum hal_power_modules {
 };
 
 int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode);
-void hal_power_set_module_power(enum hal_power_modules module, uint8_t state);
+int hal_power_set_module_power(enum hal_power_modules module, uint8_t state);
 
 #endif // __HAL_POWER_H
