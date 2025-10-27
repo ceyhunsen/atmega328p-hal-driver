@@ -144,7 +144,39 @@ void test_change_module_powers_same_bit() {
         }
 
         TEST_ASSERT_EQUAL(
-            1, hal_power_change_module_powers((uint8_t)i, (uint8_t)i));
+            hal_result_power_same_bit_set_for_power_management,
+            hal_power_change_module_powers((uint8_t)i, (uint8_t)i));
+    }
+}
+
+void test_change_module_powers_power_off() {
+    int i;
+
+    for (i = 1; i < 1 << 8; i++) {
+        if (i & BIT(4)) {
+            continue;
+        }
+        PRR = 0;
+
+        TEST_ASSERT_EQUAL(hal_result_power_ok,
+                          hal_power_change_module_powers((uint8_t)i, 0));
+        TEST_ASSERT_EQUAL(i, PRR);
+    }
+}
+
+void test_change_module_powers_power_on() {
+    int i;
+    uint8_t all_powered_off = (1 << 8) - 1;
+
+    for (i = 1; i < 1 << 8; i++) {
+        if (i & BIT(4)) {
+            continue;
+        }
+        PRR = all_powered_off;
+
+        TEST_ASSERT_EQUAL(hal_result_power_ok,
+                          hal_power_change_module_powers(0, (uint8_t)i));
+        TEST_ASSERT_EQUAL((uint8_t)~i, PRR);
     }
 }
 
@@ -155,6 +187,8 @@ int main() {
     RUN_TEST(test_power_set_sleep_mode_incorrect_input);
     RUN_TEST(test_change_module_powers_reserved_value);
     RUN_TEST(test_change_module_powers_same_bit);
+    RUN_TEST(test_change_module_powers_power_off);
+    RUN_TEST(test_change_module_powers_power_on);
 
     return UnityEnd();
 }
