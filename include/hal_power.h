@@ -41,6 +41,13 @@ enum hal_power_sleep_modes {
     hal_power_external_standby_mode = 7
 };
 
+/// @brief Module specific errors for the power related stuff.
+enum hal_result_power {
+    hal_result_power_ok,
+    hal_result_power_bit_is_reserved,
+    hal_result_power_same_bit_set_for_power_management,
+};
+
 /**
  * Modules that have configurable power mode. Value for every module is the same
  * as the bit number in target register.
@@ -57,7 +64,7 @@ enum hal_power_modules {
 
 int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode);
 int hal_power_set_module_power(enum hal_power_modules module, uint8_t state);
-int hal_power_change_module_powers(uint8_t power_off_list,
-                                   uint8_t power_on_list);
+enum hal_result_power hal_power_change_module_powers(uint8_t power_off_list,
+                                                     uint8_t power_on_list);
 
 #endif // __HAL_POWER_H
