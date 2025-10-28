@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Callback function to mock sleep instruction.
+- Power module extra: `hal_power_change_module_powers`
 
 ### Changed
 
