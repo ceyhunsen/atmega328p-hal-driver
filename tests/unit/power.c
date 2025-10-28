@@ -180,6 +180,19 @@ void test_change_module_powers_power_on() {
     }
 }
 
+/// @brief Change powered on and off modules randomly.
+void test_change_module_powers_power_on_and_off_random() {
+    PRR = 0b10100000;
+    TEST_ASSERT_EQUAL(hal_result_power_ok,
+                      hal_power_change_module_powers(0b01000000, 0b10000000));
+    TEST_ASSERT_EQUAL(0b01100000, PRR);
+
+    PRR = 0b00001111;
+    TEST_ASSERT_EQUAL(hal_result_power_ok,
+                      hal_power_change_module_powers(0b10000000, 0b00001000));
+    TEST_ASSERT_EQUAL(0b10000111, PRR);
+}
+
 int main() {
     RUN_TEST(test_sleep_mode);
     RUN_TEST(test_module_power_single);
@@ -189,6 +202,7 @@ int main() {
     RUN_TEST(test_change_module_powers_same_bit);
     RUN_TEST(test_change_module_powers_power_off);
     RUN_TEST(test_change_module_powers_power_on);
+    RUN_TEST(test_change_module_powers_power_on_and_off_random);
 
     return UnityEnd();
 }
