@@ -33,7 +33,7 @@ link to your project using the provided `CMakeLists.txt` file:
 
 ```cmake
 # Add ATmega328P HAL driver as a subdirectory.
-add_subdirectory("${PROJECT_SOURCE_DIR}/atmega328p-hal-driver" atmega328p_hal_build)
+add_subdirectory("${PROJECT_SOURCE_DIR}/path/to/atmega328p-hal-driver")
 target_link_libraries(my_project PRIVATE atmega328p_hal_driver)
 ```
 
