@@ -32,16 +32,15 @@ You can choose to add this repo as a submodule to your project as a whole and
 link to your project using the provided `CMakeLists.txt` file:
 
 ```cmake
-# Add ATmega328P HAL driver as a subdirectory.
-add_subdirectory("${PROJECT_SOURCE_DIR}/atmega328p-hal-driver" atmega328p_hal_build)
+add_subdirectory("${PROJECT_SOURCE_DIR}/path/to/atmega328p-hal-driver")
 target_link_libraries(my_project PRIVATE atmega328p_hal_driver)
 ```
 
-Or, you can add specific `src/module.c` files to your build toolchain and add
-[`include/`](include/) directory as one of the include dirs for the compiler,
-manually.
+Or if you are not using Cmake, you can add specific modules in `src/` directory
+to your build toolchain. And finally add [`include/`](include/) directory as one
+of the include dirs of the compiler, manually.
 
-To compile built-in examples:
+You can try provided examples on your MCU. To compile built-in examples:
 
 ```sh
 mkdir -p build && cd build
@@ -49,8 +48,8 @@ cmake -D CMAKE_C_COMPILER=avr-gcc -D BUILD_EXAMPLES=1 ..
 cmake --build .
 ```
 
-After compilation, example files will be in `build/examples/module_name/module_name`
-and ready to be flashed to MCU.
+After compilation, example files will be in `build/examples/module_name/module_name`.
+They will be ready to be flashed to MCU.
 
 ## Documentation
 
