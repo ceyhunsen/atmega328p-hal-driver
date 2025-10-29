@@ -13,7 +13,7 @@ add_library(
 target_include_directories(atmega328p_hal_driver PUBLIC include)
 target_compile_definitions(atmega328p_hal_driver PUBLIC __AVR_ATmega328P__)
 
-set_property(TARGET atmega328p_hal_driver PROPERTY C_STANDARD 90)
+set_property(TARGET atmega328p_hal_driver PROPERTY C_STANDARD 99)
 
 # Optional examples.
 option(BUILD_EXAMPLES "Build example programs" OFF)

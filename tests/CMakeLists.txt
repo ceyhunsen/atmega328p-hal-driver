@@ -34,6 +34,7 @@ function(add_test_target test_file)
     add_executable(${TARGET_NAME} ${test_file})
 
     target_link_libraries(${TARGET_NAME} PRIVATE atmega328p_hal_driver unity mocks)
+    set_property(TARGET ${TARGET_NAME} PROPERTY C_STANDARD 99)
 
     add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME})
 endfunction()
