@@ -14,11 +14,13 @@
 #include <avr/io.h>
 
 /**
- * @brief Changes multiple module powers at one go, using given lists. Use
- * #hal_power_modules to generate power on and off lists.
+ * @brief Changes multiple module powers with a single register write. Use
+ * #hal_power_modules to generate power on and off bytes.
+ *
  * @param power_off_list Modules to power off. Set specific bit to 1 to do that.
  * @param power_on_list Modules to power on. Set specific bit to 1 to do that.
- * @returns 0 if successful. 1 if there is a problem.
+ *
+ * @returns #hal_result_power.
  */
 enum hal_result_power hal_power_change_module_powers(uint8_t power_off_list,
                                                      uint8_t power_on_list) {

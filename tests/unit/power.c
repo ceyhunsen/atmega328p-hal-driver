@@ -26,7 +26,7 @@ void test_sleep_mode() {
         if (mode != 4 && mode != 5) {
             TEST_ASSERT_EQUAL(ret, 0);
         } else {
-            TEST_ASSERT_EQUAL(ret, 1);
+            TEST_ASSERT_EQUAL(ret, hal_result_power_illegal_mode);
             continue;
         }
 
@@ -59,7 +59,8 @@ void test_module_power_single() {
     enum hal_power_modules i;
     for (i = 0; i < 8; i++) {
         if (i == 4) {
-            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            TEST_ASSERT_EQUAL(hal_result_power_module_not_found,
+                              hal_power_set_module_power(i, 1));
             continue;
         }
 
@@ -77,14 +78,15 @@ void test_module_power_single() {
  * Test if modules are turned on/off without resetting registers. This will test
  * if hal driver is overwriting other modules or not.
  */
-void test_module_power_multi() {
+void test_module_power_without_reset() {
     uint8_t reg = 0;
 
     // Start from beginning.
     enum hal_power_modules i;
     for (i = 0; i < 8; i++) {
         if (i == 4) {
-            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(i, 1));
+            TEST_ASSERT_EQUAL(hal_result_power_module_not_found,
+                              hal_power_set_module_power(i, 1));
             continue;
         }
 
@@ -103,7 +105,8 @@ void test_module_power_multi() {
     // Start from last.
     for (i = 0; i < 8; i++) {
         if (i == 3) {
-            TEST_ASSERT_EQUAL(1, hal_power_set_module_power(7 - i, 1));
+            TEST_ASSERT_EQUAL(hal_result_power_module_not_found,
+                              hal_power_set_module_power(7 - i, 1));
             continue;
         }
 
@@ -196,7 +199,7 @@ void test_change_module_powers_power_on_and_off_random() {
 int main() {
     RUN_TEST(test_sleep_mode);
     RUN_TEST(test_module_power_single);
-    RUN_TEST(test_module_power_multi);
+    RUN_TEST(test_module_power_without_reset);
     RUN_TEST(test_power_set_sleep_mode_incorrect_input);
     RUN_TEST(test_change_module_powers_reserved_value);
     RUN_TEST(test_change_module_powers_same_bit);
