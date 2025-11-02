@@ -18,6 +18,15 @@
  * Modules can be enabled or disabled individually using
  * hal_power_set_module_power() function. Possible candidates are listed in
  * #hal_power_modules.
+ *
+ * ## Extras
+ *
+ * ### Change Multiple Modules' Power States
+ *
+ * Apart from the hal_power_set_module_power(), hal_power_change_module_powers()
+ * can be used to set multiple modules' power state. #hal_power_modules should
+ * be used to construct power on and off bytes: Logic or multiple enum values to
+ * construct the 2 parameters.
  * */
 
 // SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
@@ -29,8 +38,9 @@
 #include <stdint.h>
 
 /**
- * Sleep modes for ATmega328P. Value for every mode is the same as the bit
- * number in target register.
+ * @brief Available sleep modes.
+ *
+ * Enum values matches register value for that setting.
  * */
 enum hal_power_sleep_modes {
     hal_power_idle_mode = 0,
@@ -43,14 +53,19 @@ enum hal_power_sleep_modes {
 
 /// @brief Module specific errors for the power related stuff.
 enum hal_result_power {
-    hal_result_power_ok,
+    ///< Operation successful.
+    hal_result_power_ok = 0,
+    ///< A reserved bit is used; No module has matched.
     hal_result_power_bit_is_reserved,
+    ///< Same bit is set both to power on and off. Can't decide what to do  with
+    ///< the power of that module.
     hal_result_power_same_bit_set_for_power_management,
 };
 
 /**
- * Modules that have configurable power mode. Value for every module is the same
- * as the bit number in target register.
+ * @brief Modules that's power state is configurable.
+ *
+ * Enum values matches register value for that setting.
  * */
 enum hal_power_modules {
     hal_power_adc = 0,
