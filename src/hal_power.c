@@ -16,9 +16,13 @@
 
 /**
  * @brief Set sleep mode for ATmega328P.
+ *
  * @param mode Sleep mode to be set.
+ *
+ * @returns #hal_result_power.
  */
-int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
+enum hal_result_power
+hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
     // Check if only legal values are passed.
     switch (mode) {
     case hal_power_idle_mode:
@@ -29,7 +33,7 @@ int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
     case hal_power_external_standby_mode:
         break;
     default:
-        return 1;
+        return hal_result_power_illegal_mode;
     }
 
     // Assign new mode. Other bits of the register should be 0.
@@ -42,16 +46,21 @@ int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode) {
     // Clear sleep flag after sleep.
     CLEAR_BIT(SMCR, SE);
 
-    return 0;
+    return hal_result_power_ok;
 }
 
 /**
  * @brief Set specified module's power on or off. If a module is turned off,
- * it might need reinitialization (refer to data-sheet).
+ * it might need reinitialization after it is turned on again (refer to
+ * data-sheet).
+ *
  * @param module Module name.
  * @param state 1 (or any other positive number) for on, 0 for off.
+ *
+ * @returns #hal_result_power.
  * */
-int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
+enum hal_result_power hal_power_set_module_power(enum hal_power_modules module,
+                                                 uint8_t state) {
     // Check for reserved or illegal values.
     switch (module) {
     case hal_power_adc:
@@ -63,7 +72,7 @@ int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
     case hal_power_twi:
         break;
     default:
-        return 1;
+        return hal_result_power_module_not_found;
     }
 
     if (state)
@@ -71,5 +80,5 @@ int hal_power_set_module_power(enum hal_power_modules module, uint8_t state) {
     else
         SET_BIT(PRR, module);
 
-    return 0;
+    return hal_result_power_ok;
 }

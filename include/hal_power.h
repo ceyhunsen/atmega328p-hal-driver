@@ -57,9 +57,13 @@ enum hal_result_power {
     hal_result_power_ok = 0,
     ///< A reserved bit is used; No module has matched.
     hal_result_power_bit_is_reserved,
-    ///< Same bit is set both to power on and off. Can't decide what to do  with
-    ///< the power of that module.
+    ///< Same bit is set both to power on and off. Can't decide what to do with
+    ///< the power state of that module.
     hal_result_power_same_bit_set_for_power_management,
+    ///< Given mode is illegal.
+    hal_result_power_illegal_mode,
+    ///< Given module is not present.
+    hal_result_power_module_not_found,
 };
 
 /**
@@ -77,8 +81,9 @@ enum hal_power_modules {
     hal_power_twi = 7
 };
 
-int hal_power_set_sleep_mode(enum hal_power_sleep_modes mode);
-int hal_power_set_module_power(enum hal_power_modules module, uint8_t state);
+enum hal_result_power hal_power_set_sleep_mode(enum hal_power_sleep_modes mode);
+enum hal_result_power hal_power_set_module_power(enum hal_power_modules module,
+                                                 uint8_t state);
 enum hal_result_power hal_power_change_module_powers(uint8_t power_off_list,
                                                      uint8_t power_on_list);
 
