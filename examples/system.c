@@ -17,23 +17,23 @@ ISR(WDT_vect) {
 
 int main() {
     uint8_t cause;
-    struct system_watchdog_t config;
+    struct hal_system_watchdog_t config;
 
-    cause = system_get_reset_status();
+    cause = hal_system_get_reset_status();
 
-    if (cause == system_watchdog_reset) {
+    if (cause == hal_system_watchdog_reset) {
         // Reset caused by watchdog. Means code below worked before.
     } else {
         // Reset not caused by watchdog.
     }
 
     // Create an interrupt and reset MCU after 8 seconds.
-    config.mode = system_watchdog_interrupt_and_reset_mode;
-    config.cycles = system_watchdog_1024k_cycles;
-    system_set_watchdog(config);
+    config.mode = hal_system_watchdog_interrupt_and_reset_mode;
+    config.cycles = hal_system_watchdog_1024k_cycles;
+    hal_system_set_watchdog(config);
 
     // Reset watchdog counter, if needed.
-    system_reset_watchdog();
+    hal_system_reset_watchdog();
 
     while (1)
         ;

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Naming conventions for module members like functions.
 - C standard to C99.
+- System module's naming conventions.
 
 ### Fixed
 
