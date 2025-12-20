@@ -69,15 +69,17 @@ void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
 
 /**
  * @brief Get reset status register value and reset status register. Reset
- * statuses are defined in enum `hal_system_reset_status`.
+ * statuses are defined in #hal_system_reset_status.
+ *
  * @returns Reset status register value.
+ *
  * @see hal_system_reset_status
  * */
-inline uint8_t hal_system_get_reset_status() {
-    uint8_t tmp;
+inline enum hal_system_reset_status hal_system_get_reset_status() {
+    enum hal_system_reset_status cause;
 
-    tmp = MCUSR;
+    cause = MCUSR;
     MCUSR = 0;
 
-    return tmp;
+    return cause;
 }
