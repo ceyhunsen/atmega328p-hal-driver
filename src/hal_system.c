@@ -15,6 +15,11 @@
 #include <avr/wdt.h>
 
 /**
+ * @brief Reset watchdog timer counter.
+ * */
+inline void hal_system_reset_watchdog() { wdt_reset(); }
+
+/**
  * @brief Set watchdog timer with given settings.
  * @param config Configuration option for watchdog.
  * */
@@ -61,11 +66,6 @@ void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
     // Finally, enable interrupts.
     sei();
 }
-
-/**
- * @brief Reset watchdog timer counter.
- * */
-inline void hal_system_reset_watchdog() { wdt_reset(); }
 
 /**
  * @brief Get reset status register value and reset status register. Reset

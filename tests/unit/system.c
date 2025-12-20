@@ -4,7 +4,7 @@
  * @brief Unit tests for system control and reset module.
  */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_internals.h"

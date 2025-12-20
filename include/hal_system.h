@@ -97,8 +97,8 @@ enum hal_system_reset_status {
     hal_system_watchdog_reset = 0b1000  ///< System reset caused by watchdog.
 };
 
-void hal_system_set_watchdog(struct hal_system_watchdog_t config);
 void hal_system_reset_watchdog();
+void hal_system_set_watchdog(struct hal_system_watchdog_t config);
 uint8_t hal_system_get_reset_status();
 
 #endif // __HAL_SYSTEM_H
