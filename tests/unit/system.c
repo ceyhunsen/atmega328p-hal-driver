@@ -54,6 +54,22 @@ void test_set_cycles() {
     }
 }
 
+void test_invalid_configuration() {
+    struct hal_system_watchdog_t config;
+    config.cycles = hal_system_watchdog_2k_cycles;
+    config.mode = hal_system_watchdog_interrupt_mode;
+    TEST_ASSERT_EQUAL(hal_result_system_ok, hal_system_set_watchdog(config));
+
+    config.cycles = hal_system_watchdog_1024k_cycles + 1;
+    TEST_ASSERT_EQUAL(hal_result_system_invalid_watchdog_cycles,
+                      hal_system_set_watchdog(config));
+
+    config.cycles = hal_system_watchdog_1024k_cycles;
+    config.mode = hal_system_watchdog_interrupt_and_reset_mode + 1;
+    TEST_ASSERT_EQUAL(hal_result_system_invalid_watchdog_mode,
+                      hal_system_set_watchdog(config));
+}
+
 /**
  * Test if reset status function returns same value as the register and resets
  * register afterwards.
@@ -85,6 +101,7 @@ void test_reset_cause() {
 int main() {
     RUN_TEST(test_reset_cause);
     RUN_TEST(test_set_modes);
+    RUN_TEST(test_invalid_configuration);
     RUN_TEST(test_set_cycles);
 
     return UnityEnd();
