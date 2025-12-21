@@ -21,6 +21,9 @@ inline void hal_system_reset_watchdog() { wdt_reset(); }
 
 /**
  * @brief Set watchdog timer with given settings.
+ *
+ * Beware that this operation will disable interrupts briefly.
+ *
  * @param config Configuration option for watchdog.
  * */
 void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
@@ -49,6 +52,7 @@ void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
     if (config.mode != hal_system_watchdog_disabled) {
         control_register |= (config.cycles << WDP0);
     }
+    CLEAR_BIT(control_register, WDCE);
 
     // Disable interrupts and reset watchdog counter.
     cli();
@@ -60,10 +64,11 @@ void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
     // Set change enable.
     WDTCSR |= BIT(WDCE) | BIT(WDE);
 
-    // Write final value to register.
+    // Within the next 4 clock cycles, write prescaler value and expected
+    // behaviour to register.
     WDTCSR = control_register;
 
-    // Finally, enable interrupts.
+    // Watchdog set, enable interrupts.
     sei();
 }
 

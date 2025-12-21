@@ -9,12 +9,16 @@
 
 #include "hal_internals.h"
 #include "hal_system.h"
+
 #include "test_mock_up.h"
+
 #include "unity.h"
+
 #include <avr/io.h>
 
 void test_set_modes() {
     struct hal_system_watchdog_t config;
+    config.cycles = hal_system_watchdog_2k_cycles;
 
     config.mode = hal_system_watchdog_disabled;
     hal_system_set_watchdog(config);
