@@ -5,16 +5,16 @@
  * Standard I/O operations.
  * */
 
-// SPDX-FileCopyrightText: 2023 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_io.h"
 #include "hal_internals.h"
 #include <avr/io.h>
 
-static volatile uint8_t *get_ddr_pointer(enum io_port port);
-static volatile uint8_t *get_port_pointer(enum io_port port);
-static volatile uint8_t *get_pin_pointer(enum io_port port);
+static volatile uint8_t *get_ddr_pointer(enum hal_io_port port);
+static volatile uint8_t *get_port_pointer(enum hal_io_port port);
+static volatile uint8_t *get_pin_pointer(enum hal_io_port port);
 
 /**
  * Configure an I/O pin.
@@ -22,8 +22,8 @@ static volatile uint8_t *get_pin_pointer(enum io_port port);
  * @param io I/O pin to be configured.
  * @param configuration How to configure selected pin.
  */
-enum io_result io_configure(struct io_pin io,
-                            struct io_pin_configuration configuration) {
+enum hal_result_io io_configure(struct hal_io_pin io,
+                                struct hal_io_pin_configuration configuration) {
     // Get port pointers.
     volatile uint8_t *ddr_pointer, *port_pointer;
     uint8_t ddr_value, port_value;
@@ -39,7 +39,7 @@ enum io_result io_configure(struct io_pin io,
 
     // Set direction.
     switch (configuration.direction) {
-    case io_direction_output:
+    case hal_io_direction_output:
         // Tri-state intermediate step.
         if (!(ddr_value & BIT(io.pin)) && !(port_value & BIT(io.pin))) {
             CLEAR_BIT(*port_pointer, io.pin);
@@ -53,7 +53,7 @@ enum io_result io_configure(struct io_pin io,
 
         break;
     default:
-    case io_direction_input:
+    case hal_io_direction_input:
         if (configuration.is_pull_up) {
             // Output low intermediate step.
             if ((ddr_value & BIT(io.pin)) && !(port_value & BIT(io.pin))) {
@@ -74,7 +74,7 @@ enum io_result io_configure(struct io_pin io,
         }
     }
 
-    return io_success;
+    return hal_io_success;
 }
 
 /**
@@ -83,21 +83,21 @@ enum io_result io_configure(struct io_pin io,
  * @param io Target I/O pin.
  * @param state Pin state to be set.
  * */
-enum io_result io_write(struct io_pin io, enum io_pin_state state) {
+enum hal_result_io io_write(struct hal_io_pin io, enum hal_io_pin_state state) {
     volatile uint8_t *port_pointer;
     port_pointer = get_port_pointer(io.port);
 
     switch (state) {
-    case io_state_high:
+    case hal_io_state_high:
         SET_BIT(*port_pointer, io.pin);
         break;
     default:
-    case io_state_low:
+    case hal_io_state_low:
         CLEAR_BIT(*port_pointer, io.pin);
         break;
     }
 
-    return io_success;
+    return hal_io_success;
 }
 
 /**
@@ -105,14 +105,14 @@ enum io_result io_write(struct io_pin io, enum io_pin_state state) {
  *
  * @param io Target I/O pin.
  * */
-enum io_result io_toggle(struct io_pin io) {
+enum hal_result_io io_toggle(struct hal_io_pin io) {
     volatile uint8_t *pin_pointer;
 
     pin_pointer = get_pin_pointer(io.port);
 
     SET_BIT(*pin_pointer, io.pin);
 
-    return io_success;
+    return hal_io_success;
 }
 
 /**
@@ -121,15 +121,15 @@ enum io_result io_toggle(struct io_pin io) {
  * @param io Target I/O pin.
  * @param state Pointer that will hold read result.
  * */
-enum io_result io_read(struct io_pin io, enum io_pin_state *state) {
+enum hal_result_io io_read(struct hal_io_pin io, enum hal_io_pin_state *state) {
     volatile uint8_t *pin_pointer;
     pin_pointer = get_pin_pointer(io.port);
 
     uint8_t pin_value = *pin_pointer;
 
-    *state = (pin_value & BIT(io.pin)) ? io_state_high : io_state_low;
+    *state = (pin_value & BIT(io.pin)) ? hal_io_state_high : hal_io_state_low;
 
-    return io_success;
+    return hal_io_success;
 }
 
 /**
@@ -137,9 +137,9 @@ enum io_result io_read(struct io_pin io, enum io_pin_state *state) {
  *
  * @param port I/O port.
  * @returns DDRx pointer
- * @see io_port
+ * @see hal_io_port
  * */
-static volatile uint8_t *get_ddr_pointer(enum io_port port) {
+static volatile uint8_t *get_ddr_pointer(enum hal_io_port port) {
     volatile uint8_t *p;
 
     p = &DDRB + ((uint8_t)port * 3);
@@ -152,9 +152,9 @@ static volatile uint8_t *get_ddr_pointer(enum io_port port) {
  *
  * @param port I/O port.
  * @returns PORTx pointer.
- * @see io_port
+ * @see hal_io_port
  * */
-static volatile uint8_t *get_port_pointer(enum io_port port) {
+static volatile uint8_t *get_port_pointer(enum hal_io_port port) {
     volatile uint8_t *p;
 
     p = &PORTB + ((uint8_t)port * 3);
@@ -167,9 +167,9 @@ static volatile uint8_t *get_port_pointer(enum io_port port) {
  *
  * @param port I/O port.
  * @returns PINx pointer.
- * @see io_port
+ * @see hal_io_port
  * */
-static volatile uint8_t *get_pin_pointer(enum io_port port) {
+static volatile uint8_t *get_pin_pointer(enum hal_io_port port) {
     volatile uint8_t *p;
 
     p = &PINB + ((uint8_t)port * 3);
