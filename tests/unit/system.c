@@ -21,22 +21,22 @@ void test_set_modes() {
     config.cycles = hal_system_watchdog_2k_cycles;
 
     config.mode = hal_system_watchdog_disabled;
-    hal_system_set_watchdog(config);
+    TEST_ASSERT_EQUAL(hal_result_system_ok, hal_system_set_watchdog(config));
     TEST_ASSERT_EQUAL(0, WDTCSR & BIT(WDIE));
     TEST_ASSERT_EQUAL(0, WDTCSR & BIT(WDE));
 
     config.mode = hal_system_watchdog_interrupt_mode;
-    hal_system_set_watchdog(config);
+    TEST_ASSERT_EQUAL(hal_result_system_ok, hal_system_set_watchdog(config));
     TEST_ASSERT_EQUAL(BIT(WDIE), WDTCSR & BIT(WDIE));
     TEST_ASSERT_EQUAL(0, WDTCSR & BIT(WDE));
 
     config.mode = hal_system_watchdog_reset_mode;
-    hal_system_set_watchdog(config);
+    TEST_ASSERT_EQUAL(hal_result_system_ok, hal_system_set_watchdog(config));
     TEST_ASSERT_EQUAL(0, WDTCSR & BIT(WDIE));
     TEST_ASSERT_EQUAL(BIT(WDE), WDTCSR & BIT(WDE));
 
     config.mode = hal_system_watchdog_interrupt_and_reset_mode;
-    hal_system_set_watchdog(config);
+    TEST_ASSERT_EQUAL(hal_result_system_ok, hal_system_set_watchdog(config));
     TEST_ASSERT_EQUAL(BIT(WDIE), WDTCSR & BIT(WDIE));
     TEST_ASSERT_EQUAL(BIT(WDE), WDTCSR & BIT(WDE));
 }
@@ -44,10 +44,12 @@ void test_set_modes() {
 void test_set_cycles() {
     uint8_t i;
     struct hal_system_watchdog_t config;
+    config.mode = hal_system_watchdog_interrupt_mode;
 
     for (i = 0; i < 10; i++) {
         config.cycles = hal_system_watchdog_2k_cycles + i;
-        hal_system_set_watchdog(config);
+        TEST_ASSERT_EQUAL(hal_result_system_ok,
+                          hal_system_set_watchdog(config));
         TEST_ASSERT_EQUAL(config.cycles, WDTCSR & 0b1111);
     }
 }

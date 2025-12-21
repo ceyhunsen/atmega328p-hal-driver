@@ -26,10 +26,19 @@ inline void hal_system_reset_watchdog() { wdt_reset(); }
  *
  * @param config Configuration option for watchdog.
  * */
-void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
+enum hal_result_system
+hal_system_set_watchdog(struct hal_system_watchdog_t config) {
     uint8_t control_register;
 
     control_register = 0;
+
+    if (config.cycles > hal_system_watchdog_1024k_cycles) {
+        return hal_result_system_invalid_watchdog_cycles;
+    }
+
+    if (config.mode > hal_system_watchdog_interrupt_and_reset_mode) {
+        return hal_result_system_invalid_watchdog_mode;
+    }
 
     // Save operating mode.
     switch (config.mode) {
@@ -70,6 +79,8 @@ void hal_system_set_watchdog(struct hal_system_watchdog_t config) {
 
     // Watchdog set, enable interrupts.
     sei();
+
+    return hal_result_system_ok;
 }
 
 /**

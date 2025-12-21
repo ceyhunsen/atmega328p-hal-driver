@@ -39,6 +39,16 @@
 
 #include <stdint.h>
 
+/// @brief Module specific errors for the power related stuff.
+enum hal_result_system {
+    ///< Operation successful.
+    hal_result_system_ok = 0,
+    ///< Given configuration's cycle input is invalid.
+    hal_result_system_invalid_watchdog_mode,
+    ///< Given configuration's cycle input is invalid.
+    hal_result_system_invalid_watchdog_cycles,
+};
+
 /**
  * @enum hal_system_watchdog_modes
  * @brief Trigger modes after watchdog timer expires.
@@ -98,7 +108,8 @@ enum hal_system_reset_status {
 };
 
 void hal_system_reset_watchdog();
-void hal_system_set_watchdog(struct hal_system_watchdog_t config);
+enum hal_result_system
+hal_system_set_watchdog(struct hal_system_watchdog_t config);
 enum hal_system_reset_status hal_system_get_reset_status();
 
 #endif // __HAL_SYSTEM_H
