@@ -18,7 +18,7 @@
  *
  * ## Configuring Pins
  *
- * Configuring a I/O pin is done with io_configure() function. This function
+ * Configuring a I/O pin is done with hal_io_configure() function. This function
  * will accept any kind of information about a pin.
  *
  * ### Switching Between Input and Output
@@ -36,15 +36,15 @@
  *
  * ### Change Pin Output State
  *
- * I/O pins can be driven high or low with io_write() function.
+ * I/O pins can be driven high or low with hal_io_write() function.
  *
  * ### Toggling Pin Output State
  *
- * Pin state can be toggled with io_toggle() function.
+ * Pin state can be toggled with hal_io_toggle() function.
  *
  * ### Reading Pin Input State
  *
- * Pin state can be read with io_read() function. Read value should be stored
+ * Pin state can be read with hal_io_read() function. Read value should be stored
  * in given \ref hal_io_pin_state pointer.
  * */
 
@@ -106,10 +106,10 @@ struct hal_io_pin_configuration {
     uint8_t is_pull_up;
 };
 
-enum hal_result_io io_configure(struct hal_io_pin io,
+enum hal_result_io hal_io_configure(struct hal_io_pin io,
                                 struct hal_io_pin_configuration configuration);
-enum hal_result_io io_write(struct hal_io_pin io, enum hal_io_pin_state state);
-enum hal_result_io io_toggle(struct hal_io_pin io);
-enum hal_result_io io_read(struct hal_io_pin io, enum hal_io_pin_state *state);
+enum hal_result_io hal_io_write(struct hal_io_pin io, enum hal_io_pin_state state);
+enum hal_result_io hal_io_toggle(struct hal_io_pin io);
+enum hal_result_io hal_io_read(struct hal_io_pin io, enum hal_io_pin_state *state);
 
 #endif // __HAL_IO_H

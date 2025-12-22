@@ -28,7 +28,7 @@ void test_direction_output_b_single() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, DDRB);
@@ -53,7 +53,7 @@ void test_direction_output_b_multi() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -77,7 +77,7 @@ void test_direction_output_c_single() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, DDRC);
@@ -102,7 +102,7 @@ void test_direction_output_c_multi() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -126,7 +126,7 @@ void test_direction_output_d_single() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, DDRD);
@@ -151,7 +151,7 @@ void test_direction_output_d_multi() {
         configuration.direction = hal_io_direction_output;
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
-        result = io_configure(io_pin, configuration);
+        result = hal_io_configure(io_pin, configuration);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -171,13 +171,13 @@ void test_read_b_single() {
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PINB = 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
 
@@ -195,13 +195,13 @@ void test_read_b_multi() {
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PINB |= 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(hal_io_success, result);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
     }
@@ -217,13 +217,13 @@ void test_read_c_single() {
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PINC = 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
 
@@ -241,13 +241,13 @@ void test_read_c_multi() {
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PINC |= 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(hal_io_success, result);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
     }
@@ -263,13 +263,13 @@ void test_read_d_single() {
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PIND = 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
 
@@ -287,13 +287,13 @@ void test_read_d_multi() {
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(hal_io_state_low, state);
 
         PIND |= 1 << i;
 
-        result = io_read(io_pin, &state);
+        result = hal_io_read(io_pin, &state);
         TEST_ASSERT_EQUAL(hal_io_success, result);
         TEST_ASSERT_EQUAL(hal_io_state_high, state);
     }
@@ -307,7 +307,7 @@ void test_toggle_b_single() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PINB);
@@ -326,7 +326,7 @@ void test_toggle_b_multi() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_b;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -344,7 +344,7 @@ void test_toggle_c_single() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PINC);
@@ -363,7 +363,7 @@ void test_toggle_c_multi() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_c;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -381,7 +381,7 @@ void test_toggle_d_single() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PIND);
@@ -400,7 +400,7 @@ void test_toggle_d_multi() {
     for (i = 0; i < 8; i++) {
         io_pin.port = hal_io_port_d;
         io_pin.pin = i;
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
 
         // Every iteration, pin i should be set to ouput.
         register_value |= 1 << i;
@@ -421,12 +421,12 @@ void test_write_b_single() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(0 << i, PORTB);
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PORTB);
 
@@ -447,17 +447,17 @@ void test_write_b_multi() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTB);
 
         register_value |= 1 << i;
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTB);
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
     }
 }
 
@@ -472,12 +472,12 @@ void test_write_c_single() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(0 << i, PORTC);
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PORTC);
 
@@ -498,17 +498,17 @@ void test_write_c_multi() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTC);
 
         register_value |= 1 << i;
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTC);
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
     }
 }
 
@@ -523,12 +523,12 @@ void test_write_d_single() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(0 << i, PORTD);
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(1 << i, PORTD);
 
@@ -549,17 +549,17 @@ void test_write_d_multi() {
         io_pin.pin = i;
 
         state = hal_io_state_low;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTD);
 
         register_value |= 1 << i;
 
         state = hal_io_state_high;
-        result = io_write(io_pin, state);
+        result = hal_io_write(io_pin, state);
         TEST_ASSERT_EQUAL(result, hal_io_success);
         TEST_ASSERT_EQUAL(register_value, PORTD);
-        result = io_toggle(io_pin);
+        result = hal_io_toggle(io_pin);
     }
 }
 

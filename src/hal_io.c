@@ -22,8 +22,9 @@ static volatile uint8_t *get_pin_pointer(enum hal_io_port port);
  * @param io I/O pin to be configured.
  * @param configuration How to configure selected pin.
  */
-enum hal_result_io io_configure(struct hal_io_pin io,
-                                struct hal_io_pin_configuration configuration) {
+enum hal_result_io
+hal_io_configure(struct hal_io_pin io,
+                 struct hal_io_pin_configuration configuration) {
     // Get port pointers.
     volatile uint8_t *ddr_pointer, *port_pointer;
     uint8_t ddr_value, port_value;
@@ -83,7 +84,8 @@ enum hal_result_io io_configure(struct hal_io_pin io,
  * @param io Target I/O pin.
  * @param state Pin state to be set.
  * */
-enum hal_result_io io_write(struct hal_io_pin io, enum hal_io_pin_state state) {
+enum hal_result_io hal_io_write(struct hal_io_pin io,
+                                enum hal_io_pin_state state) {
     volatile uint8_t *port_pointer;
     port_pointer = get_port_pointer(io.port);
 
@@ -105,7 +107,7 @@ enum hal_result_io io_write(struct hal_io_pin io, enum hal_io_pin_state state) {
  *
  * @param io Target I/O pin.
  * */
-enum hal_result_io io_toggle(struct hal_io_pin io) {
+enum hal_result_io hal_io_toggle(struct hal_io_pin io) {
     volatile uint8_t *pin_pointer;
 
     pin_pointer = get_pin_pointer(io.port);
@@ -121,7 +123,8 @@ enum hal_result_io io_toggle(struct hal_io_pin io) {
  * @param io Target I/O pin.
  * @param state Pointer that will hold read result.
  * */
-enum hal_result_io io_read(struct hal_io_pin io, enum hal_io_pin_state *state) {
+enum hal_result_io hal_io_read(struct hal_io_pin io,
+                               enum hal_io_pin_state *state) {
     volatile uint8_t *pin_pointer;
     pin_pointer = get_pin_pointer(io.port);
 
