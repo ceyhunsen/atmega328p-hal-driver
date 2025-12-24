@@ -44,8 +44,8 @@
  *
  * ### Reading Pin Input State
  *
- * Pin state can be read with hal_io_read() function. Read value should be stored
- * in given \ref hal_io_pin_state pointer.
+ * Pin state can be read with hal_io_read() function. Read value should be
+ * stored in given \ref hal_io_pin_state pointer.
  * */
 
 // SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
@@ -62,7 +62,8 @@
  */
 enum hal_result_io {
     hal_io_success = 0,
-    hal_io_error,
+    hal_result_io_error_invalid_pin,
+    hal_result_io_error_invalid_port,
 };
 
 /**
@@ -106,10 +107,13 @@ struct hal_io_pin_configuration {
     uint8_t is_pull_up;
 };
 
-enum hal_result_io hal_io_configure(struct hal_io_pin io,
-                                struct hal_io_pin_configuration configuration);
-enum hal_result_io hal_io_write(struct hal_io_pin io, enum hal_io_pin_state state);
+enum hal_result_io
+hal_io_configure(struct hal_io_pin io,
+                 struct hal_io_pin_configuration configuration);
+enum hal_result_io hal_io_write(struct hal_io_pin io,
+                                enum hal_io_pin_state state);
 enum hal_result_io hal_io_toggle(struct hal_io_pin io);
-enum hal_result_io hal_io_read(struct hal_io_pin io, enum hal_io_pin_state *state);
+enum hal_result_io hal_io_read(struct hal_io_pin io,
+                               enum hal_io_pin_state *state);
 
 #endif // __HAL_IO_H

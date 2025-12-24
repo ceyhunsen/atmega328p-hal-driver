@@ -32,6 +32,13 @@ hal_io_configure(struct hal_io_pin io,
     ddr_pointer = get_ddr_pointer(io.port);
     port_pointer = get_port_pointer(io.port);
 
+    if (io.port > hal_io_port_d) {
+        return hal_result_io_error_invalid_port;
+    }
+    if (io.pin > 8) {
+        return hal_result_io_error_invalid_pin;
+    }
+
     // Read register values before doing a modification. Reading these
     // values beforehand will help in case of an interruption from another
     // context like interrupts.

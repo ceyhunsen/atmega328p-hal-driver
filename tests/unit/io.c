@@ -14,6 +14,30 @@
 #include <stdint.h>
 #include <test_mock_up.h>
 
+void test_configure_errors() {
+    enum hal_result_io result;
+    struct hal_io_pin io_pin;
+    struct hal_io_pin_configuration configuration;
+
+    // Set valid values first.
+    io_pin.pin = 0;
+    io_pin.port = hal_io_port_b;
+    configuration.direction = hal_io_direction_input;
+    configuration.is_pull_up = 0;
+
+    result = hal_io_configure(io_pin, configuration);
+    TEST_ASSERT_EQUAL(result, hal_io_success);
+
+    io_pin.pin = 9;
+    result = hal_io_configure(io_pin, configuration);
+    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_pin);
+
+    io_pin.pin = 0;
+    io_pin.port = hal_io_port_d + 1;
+    result = hal_io_configure(io_pin, configuration);
+    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_port);
+}
+
 /**
  * Tests setting GPIO direction to output, for port b while setting one port
  * at a time.
@@ -564,6 +588,8 @@ void test_write_d_multi() {
 }
 
 int main() {
+    RUN_TEST(test_configure_errors);
+
     RUN_TEST(test_direction_output_b_single);
     RUN_TEST(test_direction_output_b_multi);
     RUN_TEST(test_direction_output_c_single);
