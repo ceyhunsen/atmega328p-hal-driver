@@ -36,6 +36,11 @@ void test_configure_errors() {
     io_pin.port = hal_io_port_d + 1;
     result = hal_io_configure(io_pin, configuration);
     TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_port);
+
+    io_pin.port = hal_io_port_d;
+    configuration.direction = hal_io_direction_input + 1;
+    result = hal_io_configure(io_pin, configuration);
+    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_direction);
 }
 
 /**

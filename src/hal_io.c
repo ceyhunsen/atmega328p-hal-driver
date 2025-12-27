@@ -21,6 +21,8 @@ static volatile uint8_t *get_pin_pointer(enum hal_io_port port);
  *
  * @param io I/O pin to be configured.
  * @param configuration How to configure selected pin.
+ *
+ * @returns If given pin or configuration is invalid, returns related error.
  */
 enum hal_result_io
 hal_io_configure(struct hal_io_pin io,
@@ -29,15 +31,18 @@ hal_io_configure(struct hal_io_pin io,
     volatile uint8_t *ddr_pointer, *port_pointer;
     uint8_t ddr_value, port_value;
 
-    ddr_pointer = get_ddr_pointer(io.port);
-    port_pointer = get_port_pointer(io.port);
-
     if (io.port > hal_io_port_d) {
         return hal_result_io_error_invalid_port;
     }
     if (io.pin > 8) {
         return hal_result_io_error_invalid_pin;
     }
+    if (configuration.direction > hal_io_direction_input) {
+        return hal_result_io_error_invalid_direction;
+    }
+
+    ddr_pointer = get_ddr_pointer(io.port);
+    port_pointer = get_port_pointer(io.port);
 
     // Read register values before doing a modification. Reading these
     // values beforehand will help in case of an interruption from another

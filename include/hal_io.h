@@ -64,6 +64,7 @@ enum hal_result_io {
     hal_io_success = 0,
     hal_result_io_error_invalid_pin,
     hal_result_io_error_invalid_port,
+    hal_result_io_error_invalid_direction
 };
 
 /**
