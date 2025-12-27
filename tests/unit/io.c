@@ -26,602 +26,354 @@ void test_configure_errors() {
     configuration.is_pull_up = 0;
 
     result = hal_io_configure(io_pin, configuration);
-    TEST_ASSERT_EQUAL(result, hal_io_success);
+    TEST_ASSERT_EQUAL(hal_io_success, result);
 
     io_pin.pin = 9;
     result = hal_io_configure(io_pin, configuration);
-    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_pin);
+    TEST_ASSERT_EQUAL(hal_result_io_error_invalid_pin, result);
 
     io_pin.pin = 0;
     io_pin.port = hal_io_port_d + 1;
     result = hal_io_configure(io_pin, configuration);
-    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_port);
+    TEST_ASSERT_EQUAL(hal_result_io_error_invalid_port, result);
 
     io_pin.port = hal_io_port_d;
     configuration.direction = hal_io_direction_input + 1;
     result = hal_io_configure(io_pin, configuration);
-    TEST_ASSERT_EQUAL(result, hal_result_io_error_invalid_direction);
+    TEST_ASSERT_EQUAL(hal_result_io_error_invalid_direction, result);
 }
 
-/**
- * Tests setting GPIO direction to output, for port b while setting one port
- * at a time.
- */
-void test_direction_output_b_single() {
+void test_direction_output_single() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
     struct hal_io_pin_configuration configuration;
+    enum hal_io_port port;
     uint8_t i;
 
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        for (i = 0; i < 8; i++) {
+            configuration.direction = hal_io_direction_output;
+            io_pin.port = port;
+            io_pin.pin = i;
 
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, DDRB);
+            result = hal_io_configure(io_pin, configuration);
 
-        reset_registers();
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(1 << i, DDRB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(1 << i, DDRC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(1 << i, DDRD);
+                break;
+            }
+
+            reset_registers();
+        }
     }
 }
 
-/**
- * Tests setting GPIO direction to output, for port b while setting ports
- * sequentially.
- */
-void test_direction_output_b_multi() {
+void test_direction_output_multi() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
     struct hal_io_pin_configuration configuration;
+    enum hal_io_port port;
     uint8_t i, register_value;
 
-    register_value = 0;
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        register_value = 0;
 
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
+        for (i = 0; i < 8; i++) {
+            configuration.direction = hal_io_direction_output;
+            io_pin.port = port;
+            io_pin.pin = i;
 
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
+            result = hal_io_configure(io_pin, configuration);
 
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, DDRB);
+            // Every iteration, pin i should be set to ouput.
+            register_value |= 1 << i;
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(register_value, DDRB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(register_value, DDRC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(register_value, DDRD);
+                break;
+            }
+        }
     }
 }
 
-/**
- * Tests setting GPIO direction to output, for port c while setting one port
- * at a time.
- */
-void test_direction_output_c_single() {
+void test_read_single() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
-    struct hal_io_pin_configuration configuration;
+    enum hal_io_pin_state state;
+    enum hal_io_port port;
     uint8_t i;
 
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
 
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, DDRC);
+            result = hal_io_read(io_pin, &state);
 
-        reset_registers();
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_io_state_low, state);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                PINB = 1 << i;
+                break;
+            case hal_io_port_c:
+                PINC = 1 << i;
+                break;
+            case hal_io_port_d:
+                PIND = 1 << i;
+                break;
+            }
+
+            result = hal_io_read(io_pin, &state);
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_io_state_high, state);
+        }
     }
 }
 
-/**
- * Tests setting GPIO direction to output, for port c while setting ports
- * sequentially.
- */
-void test_direction_output_c_multi() {
+void test_read_multi() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
-    struct hal_io_pin_configuration configuration;
+    enum hal_io_pin_state state;
+    enum hal_io_port port;
+    uint8_t i;
+
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
+
+            result = hal_io_read(io_pin, &state);
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_io_state_low, state);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                PINB = 1 << i;
+                break;
+            case hal_io_port_c:
+                PINC = 1 << i;
+                break;
+            case hal_io_port_d:
+                PIND = 1 << i;
+                break;
+            }
+
+            result = hal_io_read(io_pin, &state);
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_io_state_high, state);
+        }
+    }
+}
+
+void test_toggle_single() {
+    enum hal_result_io result;
+    struct hal_io_pin io_pin;
+    enum hal_io_port port;
+    uint8_t i;
+
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
+
+            result = hal_io_toggle(io_pin);
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(1 << i, PINB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(1 << i, PINC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(1 << i, PIND);
+                break;
+            }
+
+            reset_registers();
+        }
+    }
+}
+
+void test_toggle_multi() {
+    enum hal_result_io result;
+    struct hal_io_pin io_pin;
+    enum hal_io_port port;
     uint8_t i, register_value;
 
-    register_value = 0;
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        register_value = 0;
+        reset_registers();
 
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
 
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
+            result = hal_io_toggle(io_pin);
 
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, DDRC);
+            // Every iteration, pin i should be set to ouput.
+            register_value |= 1 << i;
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(register_value, PINB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(register_value, PINC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(register_value, PIND);
+                break;
+            }
+        }
     }
 }
 
-/**
- * Tests setting GPIO direction to output, for port d while setting one port
- * at a time.
- */
-void test_direction_output_d_single() {
+void test_write_single() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
-    struct hal_io_pin_configuration configuration;
+    enum hal_io_pin_state state;
+    enum hal_io_port port;
     uint8_t i;
 
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
 
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, DDRD);
+            state = hal_io_state_low;
+            result = hal_io_write(io_pin, state);
 
-        reset_registers();
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(0 << i, PORTB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(0 << i, PORTC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(0 << i, PORTD);
+                break;
+            }
+
+            state = hal_io_state_high;
+            result = hal_io_write(io_pin, state);
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(1 << i, PORTB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(1 << i, PORTC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(1 << i, PORTD);
+                break;
+            }
+
+            reset_registers();
+        }
     }
 }
 
-/**
- * Tests setting GPIO direction to output, for port b while setting ports
- * sequentially.
- */
-void test_direction_output_d_multi() {
+void test_write_multi() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
-    struct hal_io_pin_configuration configuration;
+    enum hal_io_pin_state state;
+    enum hal_io_port port;
     uint8_t i, register_value;
 
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        configuration.direction = hal_io_direction_output;
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-        result = hal_io_configure(io_pin, configuration);
-
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
-
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, DDRD);
-    }
-}
-
-void test_read_b_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PINB = 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-
-        reset_registers();
-    }
-}
-
-void test_read_b_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PINB |= 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-    }
-}
-
-void test_read_c_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PINC = 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-
-        reset_registers();
-    }
-}
-
-void test_read_c_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PINC |= 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-    }
-}
-
-void test_read_d_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PIND = 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-
-        reset_registers();
-    }
-}
-
-void test_read_d_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(hal_io_state_low, state);
-
-        PIND |= 1 << i;
-
-        result = hal_io_read(io_pin, &state);
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(hal_io_state_high, state);
-    }
-}
-
-void test_toggle_b_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PINB);
-
-        reset_registers();
-    }
-}
-
-void test_toggle_b_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
-
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, PINB);
-    }
-}
-
-void test_toggle_c_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PINC);
-
-        reset_registers();
-    }
-}
-
-void test_toggle_c_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
-
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, PINC);
-    }
-}
-
-void test_toggle_d_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PIND);
-
-        reset_registers();
-    }
-}
-
-void test_toggle_d_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-        result = hal_io_toggle(io_pin);
-
-        // Every iteration, pin i should be set to ouput.
-        register_value |= 1 << i;
-
-        TEST_ASSERT_EQUAL(hal_io_success, result);
-        TEST_ASSERT_EQUAL(register_value, PIND);
-    }
-}
-
-void test_write_b_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(0 << i, PORTB);
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PORTB);
-
-        reset_registers();
-    }
-}
-
-void test_write_b_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_b;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTB);
-
-        register_value |= 1 << i;
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTB);
-        result = hal_io_toggle(io_pin);
-    }
-}
-
-void test_write_c_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(0 << i, PORTC);
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PORTC);
-
-        reset_registers();
-    }
-}
-
-void test_write_c_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_c;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTC);
-
-        register_value |= 1 << i;
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTC);
-        result = hal_io_toggle(io_pin);
-    }
-}
-
-void test_write_d_single() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(0 << i, PORTD);
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(1 << i, PORTD);
-
-        reset_registers();
-    }
-}
-
-void test_write_d_multi() {
-    enum hal_result_io result;
-    struct hal_io_pin io_pin;
-    enum hal_io_pin_state state;
-    uint8_t i, register_value;
-
-    register_value = 0;
-
-    for (i = 0; i < 8; i++) {
-        io_pin.port = hal_io_port_d;
-        io_pin.pin = i;
-
-        state = hal_io_state_low;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTD);
-
-        register_value |= 1 << i;
-
-        state = hal_io_state_high;
-        result = hal_io_write(io_pin, state);
-        TEST_ASSERT_EQUAL(result, hal_io_success);
-        TEST_ASSERT_EQUAL(register_value, PORTD);
-        result = hal_io_toggle(io_pin);
+    for (port = hal_io_port_b; port <= hal_io_port_d; port++) {
+        register_value = 0;
+
+        for (i = 0; i < 8; i++) {
+            io_pin.port = port;
+            io_pin.pin = i;
+
+            state = hal_io_state_low;
+            result = hal_io_write(io_pin, state);
+
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(register_value, PORTB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(register_value, PORTC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(register_value, PORTD);
+                break;
+            }
+
+            state = hal_io_state_high;
+            result = hal_io_write(io_pin, state);
+
+            register_value |= 1 << i;
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+            switch (port) {
+            default:
+            case hal_io_port_b:
+                TEST_ASSERT_EQUAL(register_value, PORTB);
+                break;
+            case hal_io_port_c:
+                TEST_ASSERT_EQUAL(register_value, PORTC);
+                break;
+            case hal_io_port_d:
+                TEST_ASSERT_EQUAL(register_value, PORTD);
+                break;
+            }
+
+            result = hal_io_toggle(io_pin);
+            TEST_ASSERT_EQUAL(hal_io_success, result);
+        }
     }
 }
 
 int main() {
     RUN_TEST(test_configure_errors);
 
-    RUN_TEST(test_direction_output_b_single);
-    RUN_TEST(test_direction_output_b_multi);
-    RUN_TEST(test_direction_output_c_single);
-    RUN_TEST(test_direction_output_c_multi);
-    RUN_TEST(test_direction_output_d_single);
-    RUN_TEST(test_direction_output_d_multi);
+    RUN_TEST(test_direction_output_single);
+    RUN_TEST(test_direction_output_multi);
 
-    RUN_TEST(test_toggle_b_single);
-    RUN_TEST(test_toggle_b_multi);
-    RUN_TEST(test_toggle_c_single);
-    RUN_TEST(test_toggle_c_multi);
-    RUN_TEST(test_toggle_d_single);
-    RUN_TEST(test_toggle_d_multi);
+    RUN_TEST(test_toggle_single);
+    RUN_TEST(test_toggle_multi);
 
-    RUN_TEST(test_read_b_single);
-    RUN_TEST(test_read_b_multi);
-    RUN_TEST(test_read_c_single);
-    RUN_TEST(test_read_c_multi);
-    RUN_TEST(test_read_d_single);
-    RUN_TEST(test_read_d_multi);
+    RUN_TEST(test_read_single);
+    RUN_TEST(test_read_multi);
 
-    RUN_TEST(test_write_b_single);
-    RUN_TEST(test_write_b_multi);
-    RUN_TEST(test_write_c_single);
-    RUN_TEST(test_write_c_multi);
-    RUN_TEST(test_write_d_single);
-    RUN_TEST(test_write_d_multi);
+    RUN_TEST(test_write_single);
+    RUN_TEST(test_write_multi);
 
     return UnityEnd();
 }
