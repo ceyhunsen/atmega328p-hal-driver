@@ -158,7 +158,7 @@ enum hal_result_io hal_io_toggle(struct hal_io_pin io) {
 }
 
 /**
- * Read value of a I/O pin.
+ * Read value of an I/O pin.
  *
  * @param io Target I/O pin.
  * @param state Pointer that will hold read result.
