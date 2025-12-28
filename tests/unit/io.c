@@ -14,10 +14,11 @@
 #include <stdint.h>
 #include <test_mock_up.h>
 
-void test_configure_errors() {
+void test_errors() {
     enum hal_result_io result;
     struct hal_io_pin io_pin;
     struct hal_io_pin_configuration configuration;
+    enum hal_io_pin_state state;
 
     // Set valid values first.
     io_pin.pin = 0;
@@ -26,7 +27,7 @@ void test_configure_errors() {
     configuration.is_pull_up = 0;
 
     result = hal_io_configure(io_pin, configuration);
-    TEST_ASSERT_EQUAL(hal_io_success, result);
+    TEST_ASSERT_EQUAL(hal_result_io_ok, result);
 
     io_pin.pin = 9;
     result = hal_io_configure(io_pin, configuration);
@@ -41,6 +42,14 @@ void test_configure_errors() {
     configuration.direction = hal_io_direction_input + 1;
     result = hal_io_configure(io_pin, configuration);
     TEST_ASSERT_EQUAL(hal_result_io_error_invalid_direction, result);
+
+    state = hal_io_state_high;
+    result = hal_io_write(io_pin, state);
+    TEST_ASSERT_EQUAL(hal_result_io_ok, result);
+
+    state = hal_io_state_high + 1;
+    result = hal_io_write(io_pin, state);
+    TEST_ASSERT_EQUAL(hal_result_io_error_invalid_state, result);
 }
 
 void test_direction_output_single() {
@@ -58,7 +67,7 @@ void test_direction_output_single() {
 
             result = hal_io_configure(io_pin, configuration);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -97,7 +106,7 @@ void test_direction_output_multi() {
             // Every iteration, pin i should be set to ouput.
             register_value |= 1 << i;
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -128,7 +137,7 @@ void test_read_single() {
 
             result = hal_io_read(io_pin, &state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             TEST_ASSERT_EQUAL(hal_io_state_low, state);
             switch (port) {
             default:
@@ -144,7 +153,7 @@ void test_read_single() {
             }
 
             result = hal_io_read(io_pin, &state);
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             TEST_ASSERT_EQUAL(hal_io_state_high, state);
         }
     }
@@ -164,7 +173,7 @@ void test_read_multi() {
 
             result = hal_io_read(io_pin, &state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             TEST_ASSERT_EQUAL(hal_io_state_low, state);
             switch (port) {
             default:
@@ -181,7 +190,7 @@ void test_read_multi() {
 
             result = hal_io_read(io_pin, &state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             TEST_ASSERT_EQUAL(hal_io_state_high, state);
         }
     }
@@ -200,7 +209,7 @@ void test_toggle_single() {
 
             result = hal_io_toggle(io_pin);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -237,7 +246,7 @@ void test_toggle_multi() {
 
             // Every iteration, pin i should be set to ouput.
             register_value |= 1 << i;
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -269,7 +278,7 @@ void test_write_single() {
             state = hal_io_state_low;
             result = hal_io_write(io_pin, state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -286,7 +295,7 @@ void test_write_single() {
             state = hal_io_state_high;
             result = hal_io_write(io_pin, state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -322,7 +331,7 @@ void test_write_multi() {
             state = hal_io_state_low;
             result = hal_io_write(io_pin, state);
 
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -340,7 +349,7 @@ void test_write_multi() {
             result = hal_io_write(io_pin, state);
 
             register_value |= 1 << i;
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
             switch (port) {
             default:
             case hal_io_port_b:
@@ -355,13 +364,13 @@ void test_write_multi() {
             }
 
             result = hal_io_toggle(io_pin);
-            TEST_ASSERT_EQUAL(hal_io_success, result);
+            TEST_ASSERT_EQUAL(hal_result_io_ok, result);
         }
     }
 }
 
 int main() {
-    RUN_TEST(test_configure_errors);
+    RUN_TEST(test_errors);
 
     RUN_TEST(test_direction_output_single);
     RUN_TEST(test_direction_output_multi);

@@ -17,6 +17,33 @@ static volatile uint8_t *get_port_pointer(enum hal_io_port port);
 static volatile uint8_t *get_pin_pointer(enum hal_io_port port);
 
 /**
+ * Checks if IO pin is valid. If not, returns error.
+ */
+#define CHECK_IO_PIN(io)                                                       \
+    if (io.port > hal_io_port_d) {                                             \
+        return hal_result_io_error_invalid_port;                               \
+    }                                                                          \
+    if (io.pin > 8) {                                                          \
+        return hal_result_io_error_invalid_pin;                                \
+    }
+
+/**
+ * Checks if IO pin configuration is valid. If not, returns error.
+ */
+#define CHECK_IO_PIN_CONFIGURATION(io)                                         \
+    if (configuration.direction > hal_io_direction_input) {                    \
+        return hal_result_io_error_invalid_direction;                          \
+    }
+
+/**
+ * Checks if IO state is valid. If not, returns error.
+ */
+#define CHECK_IO_STATE(state)                                                  \
+    if (state > hal_io_state_high) {                                           \
+        return hal_result_io_error_invalid_state;                              \
+    }
+
+/**
  * Configure an I/O pin.
  *
  * @param io I/O pin to be configured.
@@ -30,19 +57,11 @@ hal_io_configure(struct hal_io_pin io,
     // Get port pointers.
     volatile uint8_t *ddr_pointer, *port_pointer;
     uint8_t ddr_value, port_value;
-
-    if (io.port > hal_io_port_d) {
-        return hal_result_io_error_invalid_port;
-    }
-    if (io.pin > 8) {
-        return hal_result_io_error_invalid_pin;
-    }
-    if (configuration.direction > hal_io_direction_input) {
-        return hal_result_io_error_invalid_direction;
-    }
-
     ddr_pointer = get_ddr_pointer(io.port);
     port_pointer = get_port_pointer(io.port);
+
+    CHECK_IO_PIN(io);
+    CHECK_IO_PIN_CONFIGURATION(configuration);
 
     // Read register values before doing a modification. Reading these
     // values beforehand will help in case of an interruption from another
@@ -87,7 +106,7 @@ hal_io_configure(struct hal_io_pin io,
         }
     }
 
-    return hal_io_success;
+    return hal_result_io_ok;
 }
 
 /**
@@ -95,11 +114,16 @@ hal_io_configure(struct hal_io_pin io,
  *
  * @param io Target I/O pin.
  * @param state Pin state to be set.
+ *
+ * @returns If given pin or state is invalid, returns related error.
  * */
 enum hal_result_io hal_io_write(struct hal_io_pin io,
                                 enum hal_io_pin_state state) {
     volatile uint8_t *port_pointer;
     port_pointer = get_port_pointer(io.port);
+
+    CHECK_IO_PIN(io);
+    CHECK_IO_STATE(state);
 
     switch (state) {
     case hal_io_state_high:
@@ -111,7 +135,7 @@ enum hal_result_io hal_io_write(struct hal_io_pin io,
         break;
     }
 
-    return hal_io_success;
+    return hal_result_io_ok;
 }
 
 /**
@@ -121,12 +145,13 @@ enum hal_result_io hal_io_write(struct hal_io_pin io,
  * */
 enum hal_result_io hal_io_toggle(struct hal_io_pin io) {
     volatile uint8_t *pin_pointer;
-
     pin_pointer = get_pin_pointer(io.port);
+
+    CHECK_IO_PIN(io);
 
     SET_BIT(*pin_pointer, io.pin);
 
-    return hal_io_success;
+    return hal_result_io_ok;
 }
 
 /**
@@ -140,11 +165,13 @@ enum hal_result_io hal_io_read(struct hal_io_pin io,
     volatile uint8_t *pin_pointer;
     pin_pointer = get_pin_pointer(io.port);
 
+    CHECK_IO_PIN(io);
+
     uint8_t pin_value = *pin_pointer;
 
     *state = (pin_value & BIT(io.pin)) ? hal_io_state_high : hal_io_state_low;
 
-    return hal_io_success;
+    return hal_result_io_ok;
 }
 
 /**
