@@ -11,8 +11,9 @@
 #include "unity.h"
 
 #include <avr/io.h>
-#include <stdint.h>
 #include <test_mock_up.h>
+
+#include <stdint.h>
 
 void test_errors() {
     enum hal_result_io result;

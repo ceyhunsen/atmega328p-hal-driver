@@ -10,6 +10,7 @@
 
 #include "hal_io.h"
 #include "hal_internals.h"
+
 #include <avr/io.h>
 
 static volatile uint8_t *get_ddr_pointer(enum hal_io_port port);
@@ -44,7 +45,7 @@ static volatile uint8_t *get_pin_pointer(enum hal_io_port port);
     }
 
 /**
- * Configure an I/O pin.
+ * Configure an I/O pin to either input or output.
  *
  * @param io I/O pin to be configured.
  * @param configuration How to configure selected pin.
@@ -110,7 +111,7 @@ hal_io_configure(struct hal_io_pin io,
 }
 
 /**
- * Set pin state of given I/O pin.
+ * Set state of a given I/O pin.
  *
  * @param io Target I/O pin.
  * @param state Pin state to be set.
@@ -126,10 +127,10 @@ enum hal_result_io hal_io_write(struct hal_io_pin io,
     CHECK_IO_STATE(state);
 
     switch (state) {
+    default:
     case hal_io_state_high:
         SET_BIT(*port_pointer, io.pin);
         break;
-    default:
     case hal_io_state_low:
         CLEAR_BIT(*port_pointer, io.pin);
         break;
@@ -142,6 +143,8 @@ enum hal_result_io hal_io_write(struct hal_io_pin io,
  * Toggle state of the given pin.
  *
  * @param io Target I/O pin.
+ *
+ * @returns If given pin is invalid, returns related error.
  * */
 enum hal_result_io hal_io_toggle(struct hal_io_pin io) {
     volatile uint8_t *pin_pointer;
@@ -159,6 +162,8 @@ enum hal_result_io hal_io_toggle(struct hal_io_pin io) {
  *
  * @param io Target I/O pin.
  * @param state Pointer that will hold read result.
+ *
+ * @returns If given pin is invalid, returns related error.
  * */
 enum hal_result_io hal_io_read(struct hal_io_pin io,
                                enum hal_io_pin_state *state) {
@@ -175,10 +180,12 @@ enum hal_result_io hal_io_read(struct hal_io_pin io,
 }
 
 /**
- * @brief Get DDRx pointer.
+ * Gets DDRx pointer for a port.
  *
  * @param port I/O port.
+ *
  * @returns DDRx pointer
+ *
  * @see hal_io_port
  * */
 static volatile uint8_t *get_ddr_pointer(enum hal_io_port port) {
@@ -190,10 +197,12 @@ static volatile uint8_t *get_ddr_pointer(enum hal_io_port port) {
 }
 
 /**
- * @brief Get PORTx pointer.
+ * Gets PORTx pointer for a port.
  *
  * @param port I/O port.
+ *
  * @returns PORTx pointer.
+ *
  * @see hal_io_port
  * */
 static volatile uint8_t *get_port_pointer(enum hal_io_port port) {
@@ -205,10 +214,12 @@ static volatile uint8_t *get_port_pointer(enum hal_io_port port) {
 }
 
 /**
- * @brief Get PINx pointer.
+ * Gets PINx pointer for a port.
  *
  * @param port I/O port.
+ *
  * @returns PINx pointer.
+ *
  * @see hal_io_port
  * */
 static volatile uint8_t *get_pin_pointer(enum hal_io_port port) {
