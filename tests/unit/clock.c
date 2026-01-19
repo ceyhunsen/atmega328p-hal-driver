@@ -137,54 +137,55 @@ void test_change_and_read_clock_prescaler() {
     spawn_watcher_thread(reset_clkpr);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_1),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b0);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_1);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_2),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b1);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_2);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_4),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b10);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_4);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_8),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b11);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_8);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_16),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b100);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_16);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_32),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b101);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_32);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_64),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b110);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_64);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_128),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b111);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_128);
 
     TEST_ASSERT_EQUAL(hal_clock_change_clock_prescaler(hal_clock_prescaler_256),
-                      0);
+                      hal_result_clock_ok);
     TEST_ASSERT_EQUAL(CLKPR, 0b1000);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_256);
 
     // Passing a value bigger should return error and register should stay the
     // same.
     TEST_ASSERT_EQUAL(
-        hal_clock_change_clock_prescaler(hal_clock_prescaler_256 + 1), 1);
+        hal_clock_change_clock_prescaler(hal_clock_prescaler_256 + 1),
+        hal_result_clock_invalid_prescaler);
     TEST_ASSERT_EQUAL(CLKPR, 0b1000);
     TEST_ASSERT_EQUAL(hal_clock_get_clock_prescaler(), hal_clock_prescaler_256);
 }
