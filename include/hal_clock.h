@@ -39,8 +39,8 @@ enum hal_result_clock {
  * 0b1111111). Please check datasheet for more information.
  */
 struct hal_clock_oscillator_calibration {
-    uint8_t range
-        : 1; ///< High or low options for the available calibration range.
+    uint8_t
+        range : 1; ///< High or low options for the available calibration range.
     uint8_t calibration_value : 7; ///< Actual calibration value. Maximum 127
                                    ///< (128 different values).
 };
