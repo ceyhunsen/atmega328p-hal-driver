@@ -49,21 +49,37 @@ cmake --build .
 ```
 
 After compilation, example files will be in `build/examples/module_name/module_name`.
-They will be ready to be flashed to MCU.
+They will be ready to be flashed to the MCU.
 
 ## Documentation
 
-Code documentation is available online at [atmega328p-hal-driver.readthedocs.io](https://atmega328p-hal-driver.readthedocs.io).
-It can also be generated with `Doxygen`. Please see [docs/README.md](docs/README.md)
-for more information about this.
+Documentation can be generated either locally or can be found online at
+[atmega328p-hal-driver.readthedocs.io](https://atmega328p-hal-driver.readthedocs.io).
+
+To generate documentation locally:
+
+```sh
+cd docs/
+doxygen Doxyfile
+```
+
+Open `build/html/index.html` in your preferred browser for the webpage. Or
+proceed to generate PDF file version with latex:
+
+```sh
+cd build/latex
+make
+```
+
+Generated PDF file (`refman.pdf`) will be in `build/latex` directory.
 
 ## Testing
 
-There are local unit and integration tests that can test this driver without the
-actual hardware. These tests utilizes [Unity](https://www.throwtheswitch.org/unity)
-as the testing framework. [Unity repository](https://github.com/ThrowTheSwitch/Unity)
-already added as a submodule to this repo. If you didn't clone this repo
-recursively, run:
+There are unit and integration tests that can be used to test this driver
+without the actual hardware. These tests utilizes
+[Unity](https://www.throwtheswitch.org/unity) as the testing framework.
+[Unity repository](https://github.com/ThrowTheSwitch/Unity) already added as a
+submodule to this repo. If you didn't clone this repo recursively, run:
 
 ```sh
 git submodule update --init
