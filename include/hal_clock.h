@@ -15,13 +15,19 @@
  * details and set it according to the ATmega328P datasheet.
  * */
 
-// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2026 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #ifndef __HAL_CLOCK_H
 #define __HAL_CLOCK_H
 
 #include <stdint.h>
+
+/// @brief Module specific errors for the clock related stuff.
+enum hal_result_clock {
+    hal_result_clock_ok = 0,
+    hal_result_clock_invalid_prescaler
+};
 
 /**
  * @struct hal_clock_oscillator_calibration
@@ -61,7 +67,7 @@ enum hal_clock_prescaler_division_rates {
 };
 
 enum hal_clock_prescaler_division_rates hal_clock_get_clock_prescaler();
-int hal_clock_change_clock_prescaler(
+enum hal_result_clock hal_clock_change_clock_prescaler(
     enum hal_clock_prescaler_division_rates divisor);
 
 #endif // __HAL_CLOCK_H

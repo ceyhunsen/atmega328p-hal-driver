@@ -5,7 +5,7 @@
  * @brief Configures system input clock.
  * */
 
-// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2026 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_clock.h"
@@ -49,12 +49,11 @@ enum hal_clock_prescaler_division_rates hal_clock_get_clock_prescaler() {
 /**
  * @brief Changes clock prescaler.
  * @param divisor Division value up to 256.
- * @return 0 if divisor is in range, 1 if not in range.
  */
-int hal_clock_change_clock_prescaler(
+enum hal_result_clock hal_clock_change_clock_prescaler(
     enum hal_clock_prescaler_division_rates divisor) {
     if (divisor > hal_clock_prescaler_256) {
-        return 1;
+        return hal_result_clock_invalid_prescaler;
     }
 
     // Enable prescaler.
@@ -64,5 +63,5 @@ int hal_clock_change_clock_prescaler(
     // Write divisor.
     CLKPR = divisor;
 
-    return 0;
+    return hal_result_clock_ok;
 }
