@@ -4,7 +4,7 @@
  * @brief Unit tests for clock module.
  */
 
-// SPDX-FileCopyrightText: 2025 Ceyhun Şen <ceyhuusen@gmail.com>
+// SPDX-FileCopyrightText: 2026 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
 #include "hal_clock.h"

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - I/O module naming conventions.
+- Clock module return type from int to enum.
 
 ## [0.4.1]
 
