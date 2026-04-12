@@ -15,7 +15,7 @@
 
 enum hal_result_timer0 {
     hal_result_timer0_ok = 0,                     ///< Operation was successful
-    hal_result_timer0_invalid_compare_output_mode ///< Invalid setting for
+    hal_result_timer0_invalid_output_compare_mode ///< Invalid setting for
                                                   ///< either non-PWM, fast PWM
                                                   ///< or phase correct PWM
                                                   ///< modes
@@ -23,10 +23,13 @@ enum hal_result_timer0 {
 
 /// @brief Define operation mode with output compare bit. Works for non-PWM,
 /// fast PWM or phase correct modes.
-enum hal_timer0_compare_output_mode {
+enum hal_timer0_output_compare_mode {
     hal_timer0_compare_output_mode_normal =
         0, ///< Normal port operation, OC0A disconnected
     hal_timer0_compare_output_mode_toggle, ///< Toggle OC0A on compare match
     hal_timer0_compare_output_mode_clear,  ///< Clear OC0A on compare match
     hal_timer0_compare_output_mode_set     ///< Set OC0A on compare match
 };
+
+enum hal_result_timer0
+hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_mode mode);
