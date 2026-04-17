@@ -14,6 +14,18 @@
 #include <avr/io.h>
 #include <stdint.h>
 
+/**
+ * @brief Set output compare pin behaviour.
+ *
+ * Behavior will change based on the compare output mode. Please refer to the
+ * datasheet for more information.
+ *
+ * @param mode Output compare mode to set.
+ * @return Error if given mode is invalid, ok if given mode is valid.
+ *
+ * \see hal_timer0_output_compare_mode
+ * @todo Check if corresponding DDR bit is set.
+ */
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_mode mode) {
     if (mode < hal_timer0_compare_output_mode_normal ||
