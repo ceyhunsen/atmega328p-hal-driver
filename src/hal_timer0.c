@@ -20,23 +20,33 @@
  * Behavior will change based on the compare output mode. Please refer to the
  * datasheet for more information.
  *
+ * @param reg Output compare register to set.
  * @param mode Output compare mode to set.
- * @return Error if given mode is invalid, ok if given mode is valid.
+ *
+ * @return Error if given mode or register is invalid, ok if everything is
+ * valid.
  *
  * \see hal_timer0_output_compare_mode
  * @todo Check if corresponding DDR bit is set.
  */
 enum hal_result_timer0
-hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_mode mode) {
-    if (mode < hal_timer0_compare_output_mode_normal ||
-        mode > hal_timer0_compare_output_mode_set) {
-        return hal_result_timer0_invalid_output_compare_mode;
-    }
-
+hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
+                                   enum hal_timer0_output_compare_mode mode) {
     volatile uint8_t reg_val = TCCR0A;
 
-    switch (mode) {
+    switch (reg) {
+    case hal_timer0_output_compare_register_a:
+        reg_val = TCCR0A;
+        break;
+    case hal_timer0_output_compare_register_b:
+        reg_val = TCCR0B;
+        break;
+
     default:
+        return hal_result_timer0_invalid_output_compare_register;
+    }
+
+    switch (mode) {
     case hal_timer0_compare_output_mode_normal:
         CLEAR_BIT(reg_val, COM0A1);
         CLEAR_BIT(reg_val, COM0A0);
@@ -53,9 +63,22 @@ hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_mode mode) {
         SET_BIT(reg_val, COM0A1);
         SET_BIT(reg_val, COM0A0);
         break;
+
+    default:
+        return hal_result_timer0_invalid_output_compare_mode;
     }
 
-    TCCR0A = reg_val;
+    switch (reg) {
+    case hal_timer0_output_compare_register_a:
+        TCCR0A = reg_val;
+        break;
+    case hal_timer0_output_compare_register_b:
+        TCCR0B = reg_val;
+        break;
+
+    default:
+        return hal_result_timer0_invalid_output_compare_register;
+    }
 
     return hal_result_timer0_ok;
 }

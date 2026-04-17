@@ -13,12 +13,22 @@
 // SPDX-FileCopyrightText: 2026 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
+/// @brief Available return types for timer0 functions.
 enum hal_result_timer0 {
-    hal_result_timer0_ok = 0,                     ///< Operation was successful
-    hal_result_timer0_invalid_output_compare_mode ///< Invalid setting for
-                                                  ///< either non-PWM, fast PWM
-                                                  ///< or phase correct PWM
-                                                  ///< modes
+    hal_result_timer0_ok = 0,                      ///< Operation was successful
+    hal_result_timer0_invalid_output_compare_mode, ///< Invalid setting for
+                                                   ///< either non-PWM, fast PWM
+                                                   ///< or phase correct PWM
+                                                   ///< modes
+    hal_result_timer0_invalid_output_compare_register, ///< An invalid output
+                                                       ///< compare register is
+                                                       ///< specified
+};
+
+/// @brief Two of the output compare registers, that are available to timer0.
+enum hal_timer0_output_compare_register {
+    hal_timer0_output_compare_register_a = 0, ///< Output compare register A
+    hal_timer0_output_compare_register_b = 1  ///< Output compare register B
 };
 
 /// @brief Define operation mode with output compare bit. Works for non-PWM,
@@ -32,4 +42,5 @@ enum hal_timer0_output_compare_mode {
 };
 
 enum hal_result_timer0
-hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_mode mode);
+hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
+                                   enum hal_timer0_output_compare_mode mode);
