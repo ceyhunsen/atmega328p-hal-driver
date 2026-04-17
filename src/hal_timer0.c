@@ -32,53 +32,50 @@
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
                                    enum hal_timer0_output_compare_mode mode) {
-    volatile uint8_t reg_val = TCCR0A;
+    volatile uint8_t reg_val;
+    uint8_t reg1, reg0;
 
+    // Set bits.
     switch (reg) {
     case hal_timer0_output_compare_register_a:
-        reg_val = TCCR0A;
+        reg1 = COM0A1;
+        reg0 = COM0A0;
         break;
     case hal_timer0_output_compare_register_b:
-        reg_val = TCCR0B;
+        reg1 = COM0B1;
+        reg0 = COM0B0;
         break;
 
     default:
         return hal_result_timer0_invalid_output_compare_register;
     }
 
+    // Change the register.
+    reg_val = TCCR0A;
     switch (mode) {
     case hal_timer0_compare_output_mode_normal:
-        CLEAR_BIT(reg_val, COM0A1);
-        CLEAR_BIT(reg_val, COM0A0);
+        CLEAR_BIT(reg_val, reg1);
+        CLEAR_BIT(reg_val, reg0);
         break;
     case hal_timer0_compare_output_mode_toggle:
-        CLEAR_BIT(reg_val, COM0A1);
-        SET_BIT(reg_val, COM0A0);
+        CLEAR_BIT(reg_val, reg1);
+        SET_BIT(reg_val, reg0);
         break;
     case hal_timer0_compare_output_mode_clear:
-        SET_BIT(reg_val, COM0A1);
-        CLEAR_BIT(reg_val, COM0A0);
+        SET_BIT(reg_val, reg1);
+        CLEAR_BIT(reg_val, reg0);
         break;
     case hal_timer0_compare_output_mode_set:
-        SET_BIT(reg_val, COM0A1);
-        SET_BIT(reg_val, COM0A0);
+        SET_BIT(reg_val, reg1);
+        SET_BIT(reg_val, reg0);
         break;
 
     default:
         return hal_result_timer0_invalid_output_compare_mode;
     }
 
-    switch (reg) {
-    case hal_timer0_output_compare_register_a:
-        TCCR0A = reg_val;
-        break;
-    case hal_timer0_output_compare_register_b:
-        TCCR0B = reg_val;
-        break;
-
-    default:
-        return hal_result_timer0_invalid_output_compare_register;
-    }
+    // Write new value to register.
+    TCCR0A = reg_val;
 
     return hal_result_timer0_ok;
 }

@@ -24,7 +24,8 @@
 void set_and_test(enum hal_timer0_output_compare_register reg,
                   enum hal_timer0_output_compare_mode mode, uint8_t expected,
                   uint8_t initial_val) {
-    printf("For mode %d, expected value is %d\n", mode, expected);
+    printf("For mode %d, expected value is %d and register is: %08b\n", mode,
+           expected, TCCR0A);
 
     TEST_ASSERT_EQUAL(hal_timer0_set_output_compare_mode(reg, mode),
                       hal_result_timer0_ok);
@@ -33,13 +34,12 @@ void set_and_test(enum hal_timer0_output_compare_register reg,
     default:
     case hal_timer0_output_compare_register_a:
         TEST_ASSERT_EQUAL(TCCR0A >> 6, expected);
-        TEST_ASSERT_EQUAL(TCCR0A & initial_val, initial_val);
         break;
     case hal_timer0_output_compare_register_b:
-        TEST_ASSERT_EQUAL(TCCR0B >> 6, expected);
-        TEST_ASSERT_EQUAL(TCCR0B & initial_val, initial_val);
+        TEST_ASSERT_EQUAL(TCCR0A >> 4, expected);
         break;
     }
+    TEST_ASSERT_EQUAL(TCCR0A & initial_val, initial_val);
 }
 void test_set_output_compare_mode() {
     enum hal_timer0_output_compare_mode mode;
@@ -50,8 +50,8 @@ void test_set_output_compare_mode() {
 
     for (reg = hal_timer0_output_compare_register_a;
          reg <= hal_timer0_output_compare_register_b; reg++) {
+        printf("Testing OCR: %d\n", reg);
         TCCR0A = initial_val;
-        TCCR0B = initial_val;
 
         // Invalid modes should return error.
         mode = hal_timer0_compare_output_mode_set + 1;
