@@ -13,6 +13,8 @@
 // SPDX-FileCopyrightText: 2026 Ceyhun Şen <ceyhuusen@gmail.com>
 // SPDX-License-Identifier: MIT
 
+#include <stdint.h>
+
 /// @brief Available return types for timer0 functions.
 enum hal_result_timer0 {
     hal_result_timer0_ok = 0,                      ///< Operation was successful
@@ -41,6 +43,8 @@ enum hal_timer0_output_compare_mode {
     hal_timer0_compare_output_mode_set     ///< Set OC0A on compare match
 };
 
+uint8_t hal_timer0_get_counter();
+void hal_timer0_set_counter(uint8_t val);
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
                                    enum hal_timer0_output_compare_mode mode);

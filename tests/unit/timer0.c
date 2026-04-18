@@ -16,6 +16,20 @@
 
 #include <avr/io.h>
 
+void basic_set_and_get_timer0_counter() {
+    uint8_t val;
+
+    TEST_ASSERT_EQUAL(hal_timer0_get_counter(), 0);
+
+    val = 0x45;
+    hal_timer0_set_counter(val);
+    TEST_ASSERT_EQUAL(hal_timer0_get_counter(), val);
+
+    val = 0x54;
+    hal_timer0_set_counter(val);
+    TEST_ASSERT_EQUAL(hal_timer0_get_counter(), val);
+}
+
 /// @brief Try to change COM0A* bits and check if operation is successful or
 /// not.
 /// @param mode Mode to be tested
@@ -90,6 +104,7 @@ void test_set_output_compare_register_wrong() {
 }
 
 int main() {
+    RUN_TEST(basic_set_and_get_timer0_counter);
     RUN_TEST(test_set_output_compare_mode);
     RUN_TEST(test_set_output_compare_register_wrong);
 

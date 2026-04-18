@@ -12,7 +12,20 @@
 #include "hal_internals.h"
 
 #include <avr/io.h>
-#include <stdint.h>
+
+/**
+ * @brief Get current timer0 counter value.
+ * @returns 8 bit value of the timer0 counter.
+ */
+uint8_t hal_timer0_get_counter() {
+    volatile uint8_t val = TCNT0;
+    return val;
+}
+
+/**
+ * @brief Set new value to timer0 counter.
+ */
+void hal_timer0_set_counter(uint8_t val) { TCNT0 = val; }
 
 /**
  * @brief Set output compare pin behaviour.
