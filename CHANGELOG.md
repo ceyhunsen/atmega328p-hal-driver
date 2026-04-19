@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I/O module re-enabled.
 - Timer0
   - Set output compare mode
+  - Set operation mode for CTC and normal
+  - Get and set main counter
 
 ### Changed
 
