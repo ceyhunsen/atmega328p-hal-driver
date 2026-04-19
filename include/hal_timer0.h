@@ -25,6 +25,8 @@ enum hal_result_timer0 {
     hal_result_timer0_invalid_output_compare_register, ///< An invalid output
                                                        ///< compare register is
                                                        ///< specified
+    hal_result_timer0_invalid_operation_mode, ///< An invalid operation mode is
+                                              ///< specified
 };
 
 /// @brief Two of the output compare registers, that are available to timer0.
@@ -43,8 +45,18 @@ enum hal_timer0_output_compare_mode {
     hal_timer0_compare_output_mode_set     ///< Set OC0A on compare match
 };
 
+/// @brief Possible operation modes of the timer0 module.
+enum hal_timer0_operation_modes {
+    hal_timer0_mode_normal = 0,        ///< Counts to the top (0xFF)
+    hal_timer0_mode_ctc,               ///< Counts to the OCR0A
+    hal_timer0_mode_fast_pwm,          ///< High frequency PWM
+    hal_timer0_mode_phase_correct_pwm, ///< High resolution PWM
+};
+
 uint8_t hal_timer0_get_counter();
 void hal_timer0_set_counter(uint8_t val);
+enum hal_result_timer0
+hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode);
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
                                    enum hal_timer0_output_compare_mode mode);

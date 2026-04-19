@@ -28,6 +28,44 @@ uint8_t hal_timer0_get_counter() {
 void hal_timer0_set_counter(uint8_t val) { TCNT0 = val; }
 
 /**
+ * @brief Set timer0 operation mode
+ * @param mode Operation mode to be set
+ * @returns Error if mode is invalid
+ */
+enum hal_result_timer0
+hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode) {
+    volatile uint8_t tccr0a, tccr0b;
+
+    tccr0a = TCCR0A;
+    tccr0b = TCCR0B;
+
+    switch (mode) {
+    case hal_timer0_mode_normal:
+        CLEAR_BIT(tccr0b, WGM02);
+        CLEAR_BIT(tccr0a, WGM01);
+        CLEAR_BIT(tccr0a, WGM00);
+        break;
+    case hal_timer0_mode_ctc:
+        CLEAR_BIT(tccr0b, WGM02);
+        SET_BIT(tccr0a, WGM01);
+        CLEAR_BIT(tccr0a, WGM00);
+        break;
+    case hal_timer0_mode_fast_pwm:
+        break;
+    case hal_timer0_mode_phase_correct_pwm:
+        break;
+
+    default:
+        return hal_result_timer0_invalid_operation_mode;
+    }
+
+    TCCR0A = tccr0a;
+    TCCR0B = tccr0b;
+
+    return hal_result_timer0_ok;
+}
+
+/**
  * @brief Set output compare pin behaviour.
  *
  * Behavior will change based on the compare output mode. Please refer to the

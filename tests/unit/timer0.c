@@ -30,6 +30,26 @@ void basic_set_and_get_timer0_counter() {
     TEST_ASSERT_EQUAL(hal_timer0_get_counter(), val);
 }
 
+void set_operation_mode() {
+    enum hal_timer0_operation_modes mode;
+
+    mode = hal_timer0_mode_normal - 1;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_invalid_operation_mode);
+
+    mode = hal_timer0_mode_normal;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0);
+    TEST_ASSERT_EQUAL(TCCR0B, 0);
+
+    mode = hal_timer0_mode_ctc;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0b10);
+    TEST_ASSERT_EQUAL(TCCR0B, 0);
+}
+
 /// @brief Try to change COM0A* bits and check if operation is successful or
 /// not.
 /// @param mode Mode to be tested
@@ -105,6 +125,7 @@ void test_set_output_compare_register_wrong() {
 
 int main() {
     RUN_TEST(basic_set_and_get_timer0_counter);
+    RUN_TEST(set_operation_mode);
     RUN_TEST(test_set_output_compare_mode);
     RUN_TEST(test_set_output_compare_register_wrong);
 
