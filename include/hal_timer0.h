@@ -27,6 +27,9 @@ enum hal_result_timer0 {
                                                        ///< specified
     hal_result_timer0_invalid_operation_mode, ///< An invalid operation mode is
                                               ///< specified
+    hal_result_timer0_cant_set_output_compare_io_pin, ///< Error while setting
+                                                      ///< matching IO pin to
+                                                      ///< output
 };
 
 /// @brief Two of the output compare registers, that are available to timer0.

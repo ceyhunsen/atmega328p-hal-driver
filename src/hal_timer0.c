@@ -10,6 +10,7 @@
 
 #include "hal_timer0.h"
 #include "hal_internals.h"
+#include "hal_io.h"
 
 #include <avr/io.h>
 
@@ -71,6 +72,9 @@ hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode) {
  * Behavior will change based on the compare output mode. Please refer to the
  * datasheet for more information.
  *
+ * @warning This call will make corresponding pin's direction to output, using
+ * \ref hal_io_configure.
+ *
  * @param reg Output compare register to set.
  * @param mode Output compare mode to set.
  *
@@ -78,7 +82,6 @@ hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode) {
  * valid.
  *
  * \see hal_timer0_output_compare_mode
- * @todo Check if corresponding DDR bit is set.
  */
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
@@ -86,15 +89,30 @@ hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
     volatile uint8_t reg_val;
     uint8_t reg1, reg0;
 
+    struct hal_io_pin io = {.port = hal_io_port_d};
+    struct hal_io_pin_configuration configuration = {
+        .direction = hal_io_direction_output,
+    };
+
     // Set bits.
     switch (reg) {
     case hal_timer0_output_compare_register_a:
         reg1 = COM0A1;
         reg0 = COM0A0;
+
+        io.pin = 6;
+        if (hal_io_configure(io, configuration) != hal_result_io_ok) {
+            return hal_result_timer0_cant_set_output_compare_io_pin;
+        };
         break;
     case hal_timer0_output_compare_register_b:
         reg1 = COM0B1;
         reg0 = COM0B0;
+
+        io.pin = 5;
+        if (hal_io_configure(io, configuration) != hal_result_io_ok) {
+            return hal_result_timer0_cant_set_output_compare_io_pin;
+        };
         break;
 
     default:

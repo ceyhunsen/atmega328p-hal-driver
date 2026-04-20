@@ -68,9 +68,11 @@ void set_and_test(enum hal_timer0_output_compare_register reg,
     default:
     case hal_timer0_output_compare_register_a:
         TEST_ASSERT_EQUAL(TCCR0A >> 6, expected);
+        TEST_ASSERT_EQUAL(DDRD & 1 << 6, 1 << 6);
         break;
     case hal_timer0_output_compare_register_b:
         TEST_ASSERT_EQUAL(TCCR0A >> 4, expected);
+        TEST_ASSERT_EQUAL(DDRD & 1 << 5, 1 << 5);
         break;
     }
     TEST_ASSERT_EQUAL(TCCR0A & initial_val, initial_val);
