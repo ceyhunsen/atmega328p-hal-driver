@@ -148,3 +148,62 @@ hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
 
     return hal_result_timer0_ok;
 }
+
+/**
+ * @brief Set timer0's clock source
+ */
+enum hal_result_timer0
+hal_timer0_set_clock_source(enum hal_timer0_clock_source source) {
+    volatile uint8_t reg = TCCR0B;
+
+    switch (source) {
+    case hal_timer0_stop:
+        CLEAR_BIT(reg, CS02);
+        CLEAR_BIT(reg, CS01);
+        CLEAR_BIT(reg, CS00);
+        break;
+    case hal_timer0_prescaler_1:
+        CLEAR_BIT(reg, CS02);
+        CLEAR_BIT(reg, CS01);
+        SET_BIT(reg, CS00);
+        break;
+    case hal_timer0_prescaler_8:
+        CLEAR_BIT(reg, CS02);
+        SET_BIT(reg, CS01);
+        CLEAR_BIT(reg, CS00);
+        break;
+    case hal_timer0_prescaler_64:
+        CLEAR_BIT(reg, CS02);
+        SET_BIT(reg, CS01);
+        SET_BIT(reg, CS00);
+        break;
+    case hal_timer0_prescaler_256:
+        SET_BIT(reg, CS02);
+        CLEAR_BIT(reg, CS01);
+        CLEAR_BIT(reg, CS00);
+        break;
+    case hal_timer0_prescaler_1024:
+        SET_BIT(reg, CS02);
+        CLEAR_BIT(reg, CS01);
+        SET_BIT(reg, CS00);
+        break;
+    case hal_timer0_external_falling_edge:
+        SET_BIT(reg, CS02);
+        SET_BIT(reg, CS01);
+        CLEAR_BIT(reg, CS00);
+        break;
+    case hal_timer0_external_rising_edge:
+        SET_BIT(reg, CS02);
+        SET_BIT(reg, CS01);
+        SET_BIT(reg, CS00);
+        break;
+
+    default:
+        return hal_result_timer0_invalid_clock_source;
+        break;
+    }
+
+    TCCR0B = reg;
+
+    return hal_result_timer0_ok;
+}

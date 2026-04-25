@@ -30,6 +30,8 @@ enum hal_result_timer0 {
     hal_result_timer0_cant_set_output_compare_io_pin, ///< Error while setting
                                                       ///< matching IO pin to
                                                       ///< output
+    hal_result_timer0_invalid_clock_source, ///< An invalid clock source is
+                                            ///< specified
 };
 
 /// @brief Two of the output compare registers, that are available to timer0.
@@ -56,6 +58,20 @@ enum hal_timer0_operation_modes {
     hal_timer0_mode_phase_correct_pwm, ///< High resolution PWM
 };
 
+/// @brief Possible clock sources of the timer0.
+enum hal_timer0_clock_source {
+    hal_timer0_stop = 0,              ///< Stop timer0
+    hal_timer0_prescaler_1,           ///< No prescaler
+    hal_timer0_prescaler_8,           ///< Divide clock by 8
+    hal_timer0_prescaler_64,          ///< Divide clock by 64
+    hal_timer0_prescaler_256,         ///< Divide clock by 256
+    hal_timer0_prescaler_1024,        ///< Divide clock by 1024
+    hal_timer0_external_falling_edge, ///< External clock source on T0 pin.
+                                      ///< Clock on falling edge.
+    hal_timer0_external_rising_edge, ///< External clock source on T0 pin. Clock
+                                     ///< on rising edge.
+};
+
 uint8_t hal_timer0_get_counter();
 void hal_timer0_set_counter(uint8_t val);
 enum hal_result_timer0
@@ -63,3 +79,5 @@ hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode);
 enum hal_result_timer0
 hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
                                    enum hal_timer0_output_compare_mode mode);
+enum hal_result_timer0
+hal_timer0_set_clock_source(enum hal_timer0_clock_source source);
