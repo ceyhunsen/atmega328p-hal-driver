@@ -125,11 +125,42 @@ void test_set_output_compare_register_wrong() {
                       hal_result_timer0_invalid_output_compare_register);
 }
 
+void test_set_clock_source_invalid() {
+    enum hal_timer0_clock_source source;
+
+    for (source = hal_timer0_stop; source <= hal_timer0_external_rising_edge;
+         source++) {
+        TEST_ASSERT_EQUAL(hal_timer0_set_clock_source(source),
+                          hal_result_timer0_ok);
+    }
+
+    source = hal_timer0_stop - 1;
+    TEST_ASSERT_EQUAL(hal_timer0_set_clock_source(source),
+                      hal_result_timer0_invalid_clock_source);
+    source = hal_timer0_external_rising_edge + 1;
+    TEST_ASSERT_EQUAL(hal_timer0_set_clock_source(source),
+                      hal_result_timer0_invalid_clock_source);
+}
+
+void test_set_clock_source() {
+    enum hal_timer0_clock_source source;
+
+    TEST_ASSERT_EQUAL(TCCR0B, 0);
+
+    for (source = hal_timer0_stop; source <= hal_timer0_external_rising_edge;
+         source++) {
+        hal_timer0_set_clock_source(source);
+        TEST_ASSERT_EQUAL(TCCR0B, source);
+    }
+}
+
 int main() {
     RUN_TEST(basic_set_and_get_timer0_counter);
     RUN_TEST(set_operation_mode);
     RUN_TEST(test_set_output_compare_mode);
     RUN_TEST(test_set_output_compare_register_wrong);
+    RUN_TEST(test_set_clock_source_invalid);
+    RUN_TEST(test_set_clock_source);
 
     return UnityEnd();
 }
