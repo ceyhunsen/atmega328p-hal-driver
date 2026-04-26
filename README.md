@@ -7,6 +7,9 @@ use while staying fast and small as possible.
 Please beware that this work is **not affiliated** with Microchip (or AVR) in
 any way.
 
+Repository is located at
+[github.com/ceyhunsen/atmega328p-hal-driver](https://github.com/ceyhunsen/atmega328p-hal-driver).
+
 > [!WARNING]
 >
 > This library is in it's early development and can change drastically before
