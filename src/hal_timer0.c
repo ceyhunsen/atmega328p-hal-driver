@@ -29,6 +29,12 @@ uint8_t hal_timer0_get_counter() {
 void hal_timer0_set_counter(uint8_t val) { TCNT0 = val; }
 
 /**
+ * @brief Set the top value of the timer0 counter. This value will be the top
+ * for the timer0 if the correct #hal_timer0_operation_modes is set.
+ */
+void hal_timer0_set_top(uint8_t val) { OCR0A = val; }
+
+/**
  * @brief Set timer0 operation mode
  * @param mode Operation mode to be set
  * @returns Error if mode is invalid
@@ -52,8 +58,24 @@ hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode) {
         CLEAR_BIT(tccr0a, WGM00);
         break;
     case hal_timer0_mode_fast_pwm:
+        CLEAR_BIT(tccr0b, WGM02);
+        SET_BIT(tccr0a, WGM01);
+        SET_BIT(tccr0a, WGM00);
         break;
     case hal_timer0_mode_phase_correct_pwm:
+        CLEAR_BIT(tccr0b, WGM02);
+        CLEAR_BIT(tccr0a, WGM01);
+        SET_BIT(tccr0a, WGM00);
+        break;
+    case hal_timer0_mode_phase_correct_pwm_to_top:
+        SET_BIT(tccr0b, WGM02);
+        CLEAR_BIT(tccr0a, WGM01);
+        SET_BIT(tccr0a, WGM00);
+        break;
+    case hal_timer0_mode_fast_pwm_to_top:
+        SET_BIT(tccr0b, WGM02);
+        SET_BIT(tccr0a, WGM01);
+        SET_BIT(tccr0a, WGM00);
         break;
 
     default:
@@ -143,7 +165,6 @@ hal_timer0_set_output_compare_mode(enum hal_timer0_output_compare_register reg,
         return hal_result_timer0_invalid_output_compare_mode;
     }
 
-    // Write new value to register.
     TCCR0A = reg_val;
 
     return hal_result_timer0_ok;

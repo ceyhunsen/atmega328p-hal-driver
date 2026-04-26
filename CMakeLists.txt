@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 cmake_minimum_required(VERSION 3.11)
-project(atmega328p_hal_driver VERSION 0.5.1 LANGUAGES C)
+project(atmega328p_hal_driver VERSION 0.5.2 LANGUAGES C)
 
 add_library(
   atmega328p_hal_driver

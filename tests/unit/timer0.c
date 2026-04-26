@@ -37,6 +37,11 @@ void set_operation_mode() {
     TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
                       hal_result_timer0_invalid_operation_mode);
 
+    // A reserved value.
+    mode = 4;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_invalid_operation_mode);
+
     mode = hal_timer0_mode_normal;
     TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
                       hal_result_timer0_ok);
@@ -48,6 +53,30 @@ void set_operation_mode() {
                       hal_result_timer0_ok);
     TEST_ASSERT_EQUAL(TCCR0A, 0b10);
     TEST_ASSERT_EQUAL(TCCR0B, 0);
+
+    mode = hal_timer0_mode_fast_pwm;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0b11);
+    TEST_ASSERT_EQUAL(TCCR0B, 0);
+
+    mode = hal_timer0_mode_phase_correct_pwm;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0b01);
+    TEST_ASSERT_EQUAL(TCCR0B, 0);
+
+    mode = hal_timer0_mode_phase_correct_pwm_to_top;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0b01);
+    TEST_ASSERT_EQUAL(TCCR0B, 1 << WGM02);
+
+    mode = hal_timer0_mode_fast_pwm_to_top;
+    TEST_ASSERT_EQUAL(hal_timer0_set_operation_mode(mode),
+                      hal_result_timer0_ok);
+    TEST_ASSERT_EQUAL(TCCR0A, 0b11);
+    TEST_ASSERT_EQUAL(TCCR0B, 1 << WGM02);
 }
 
 /// @brief Try to change COM0A* bits and check if operation is successful or
@@ -154,6 +183,21 @@ void test_set_clock_source() {
     }
 }
 
+void test_set_top() {
+    uint16_t val;
+
+    TEST_ASSERT_EQUAL(OCR0A, 0);
+
+    for (val = 0; val <= 0xFF; val++) {
+        hal_timer0_set_top((uint8_t)val);
+        TEST_ASSERT_EQUAL(OCR0A, val);
+    }
+
+    val = 0xF0;
+    hal_timer0_set_top(val);
+    TEST_ASSERT_EQUAL(OCR0A, val);
+}
+
 int main() {
     RUN_TEST(basic_set_and_get_timer0_counter);
     RUN_TEST(set_operation_mode);
@@ -161,6 +205,7 @@ int main() {
     RUN_TEST(test_set_output_compare_register_wrong);
     RUN_TEST(test_set_clock_source_invalid);
     RUN_TEST(test_set_clock_source);
+    RUN_TEST(test_set_top);
 
     return UnityEnd();
 }
