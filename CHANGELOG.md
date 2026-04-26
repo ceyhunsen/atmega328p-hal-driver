@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set top for Timer0
 
+### Changed
+
+- Reordered operation mode enum member values
+
 ## [0.5.1] - 2026-04-25
 
 ### Added
