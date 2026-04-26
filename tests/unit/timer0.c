@@ -154,6 +154,21 @@ void test_set_clock_source() {
     }
 }
 
+void test_set_top() {
+    uint16_t val;
+
+    TEST_ASSERT_EQUAL(OCR0A, 0);
+
+    for (val = 0; val <= 0xFF; val++) {
+        hal_timer0_set_top((uint8_t)val);
+        TEST_ASSERT_EQUAL(OCR0A, val);
+    }
+
+    val = 0xF0;
+    hal_timer0_set_top(val);
+    TEST_ASSERT_EQUAL(OCR0A, val);
+}
+
 int main() {
     RUN_TEST(basic_set_and_get_timer0_counter);
     RUN_TEST(set_operation_mode);
@@ -161,6 +176,7 @@ int main() {
     RUN_TEST(test_set_output_compare_register_wrong);
     RUN_TEST(test_set_clock_source_invalid);
     RUN_TEST(test_set_clock_source);
+    RUN_TEST(test_set_top);
 
     return UnityEnd();
 }

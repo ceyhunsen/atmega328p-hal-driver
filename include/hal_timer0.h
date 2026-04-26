@@ -74,6 +74,8 @@ enum hal_timer0_clock_source {
 
 uint8_t hal_timer0_get_counter();
 void hal_timer0_set_counter(uint8_t val);
+void hal_timer0_set_top(uint8_t val);
+
 enum hal_result_timer0
 hal_timer0_set_operation_mode(enum hal_timer0_operation_modes mode);
 enum hal_result_timer0

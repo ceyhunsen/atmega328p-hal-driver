@@ -29,6 +29,12 @@ uint8_t hal_timer0_get_counter() {
 void hal_timer0_set_counter(uint8_t val) { TCNT0 = val; }
 
 /**
+ * @brief Set the top value of the timer0 counter. This value will be the top
+ * for the timer0 if the correct #hal_timer0_operation_modes is set.
+ */
+void hal_timer0_set_top(uint8_t val) { OCR0A = val; }
+
+/**
  * @brief Set timer0 operation mode
  * @param mode Operation mode to be set
  * @returns Error if mode is invalid
